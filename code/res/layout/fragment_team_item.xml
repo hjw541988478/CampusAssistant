@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_emp_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/selector_team_intro"
+        android:gravity="center"
+        android:text="黄佳文"
+        android:textColor="@color/aty_about_text"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tv_emp_pos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="2dp"
+        android:text="APP开发"
+        android:textColor="@color/aty_about_text"
+        android:textSize="12sp" />
+
+</LinearLayout>

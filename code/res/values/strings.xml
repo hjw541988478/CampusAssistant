@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">有我校园</string>
+    <string name="grade_lessthan_68">同学,貌似你没有学位证了哦</string>
+    <string name="grade_lessthan_80"> 要努力,少看美剧少打撸</string>
+    <string name="grade_lessthan_100">学霸,我很想懂你的世界</string>
+    <string name="point_lessthan_1.8">我还能说什么呢,加油吧少年</string>
+    <string name="point_lessthan_3.0">有双证咯</string>
+    <string name="point_lessthan_5.0">请带我去三人行复习吧</string>
+    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+
+</resources>

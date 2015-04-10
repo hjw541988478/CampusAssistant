@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MaterialCalendarView">
+        <attr name="dateTextAppearance" format="reference" />
+        <attr name="weekDayTextAppearance" format="reference" />
+        <attr name="headerTextAppearance" format="reference" />
+        <attr name="arrowColor" format="color" />
+        <attr name="selectionColor" format="color" />
+        <attr name="showOtherDates" format="boolean" />
+    </declare-styleable>
+    
+    <declare-styleable name="FloatLabelEditText">
+        <attr name="android:hint" />
+        <attr name="android:imeOptions" />
+        <attr name="android:inputType" />
+        <attr name="android:layout" />
+        <attr name="android:nextFocusDown" />
+        <attr name="android:nextFocusForward" />
+        <attr name="android:nextFocusLeft" />
+        <attr name="android:nextFocusRight" />
+        <attr name="android:nextFocusUp" />
+        <attr name="android:text" />
+        <attr name="android:textColorHint" />
+        <attr name="android:singleLine" />
+        <attr name="floatLabelColor" format="color" />
+        <attr name="labelId" format="reference" />
+        <attr name="editTextId" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="ProcessButton">
+        <attr name="pb_textProgress" format="string" />
+        <attr name="pb_textComplete" format="string" />
+        <attr name="pb_textError" format="string" />
+        <attr name="pb_colorProgress" format="color" />
+        <attr name="pb_colorComplete" format="color" />
+        <attr name="pb_colorError" format="color" />
+    </declare-styleable>
+    <declare-styleable name="FlatButton">
+        <attr name="pb_colorPressed" format="color" />
+        <attr name="pb_colorNormal" format="color" />
+        <attr name="pb_cornerRadius" format="dimension" />
+    </declare-styleable>
+
+</resources>
