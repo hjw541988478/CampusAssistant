@@ -12,6 +12,8 @@
 大学续费好帮手，可`一键续电费`，包括电费使用查询等；
 #### 5.图书查询
 图书馆书籍查询好帮手，包括`书籍借阅`情况查询等；
+#### 6.More
+...?
 
 ## 功能截图
 [<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_home.png" >](https://github.com/hjw541988478/CampusAssistant)
