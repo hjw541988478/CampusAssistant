@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="actionbar_dimen">56dp</dimen>
+    <dimen name="cet_text_size">16sp</dimen>
+    <dimen name="corner_radius">2dp</dimen>
+    <dimen name="layer_padding">3dp</dimen>
+    <dimen name="cw__default_day_size">44dp</dimen>
+    <dimen name="cw__default_month_width">352dp</dimen>
+    <dimen name="cw__default_month_height">352dp</dimen>
+
+</resources>
