@@ -50,7 +50,7 @@ public class CacheUtil {
 		List<StudentGradeInfo> listHistory = new ArrayList<StudentGradeInfo>();
 		try {
 			FileInputStream inStream = context
-					.openFileInput(Constant.CACHE_FILE);
+					.openFileInput(Config.CACHE_FILE);
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			byte[] buffer = new byte[1024];
 			int length = -1;
@@ -77,10 +77,10 @@ public class CacheUtil {
 		try {
 
 			FileInputStream inStream = null;
-			if (source_file.equals(Constant.CACHE_FILE)) {
-				inStream = context.openFileInput(Constant.CACHE_FILE);
-			} else if (source_file.equals(Constant.CET_CACHE_FILE)) {
-				inStream = context.openFileInput(Constant.CET_CACHE_FILE);
+			if (source_file.equals(Config.CACHE_FILE)) {
+				inStream = context.openFileInput(Config.CACHE_FILE);
+			} else if (source_file.equals(Config.CET_CACHE_FILE)) {
+				inStream = context.openFileInput(Config.CET_CACHE_FILE);
 			} else {
 				return listHistory;
 			}
@@ -114,11 +114,11 @@ public class CacheUtil {
 			String source_file) {
 		try {
 			FileOutputStream outStream = null;
-			if (source_file.equals(Constant.CACHE_FILE)) {
-				outStream = context.openFileOutput(Constant.CACHE_FILE,
+			if (source_file.equals(Config.CACHE_FILE)) {
+				outStream = context.openFileOutput(Config.CACHE_FILE,
 						Context.MODE_PRIVATE);
-			} else if (source_file.equals(Constant.CET_CACHE_FILE)) {
-				outStream = context.openFileOutput(Constant.CET_CACHE_FILE,
+			} else if (source_file.equals(Config.CET_CACHE_FILE)) {
+				outStream = context.openFileOutput(Config.CET_CACHE_FILE,
 						Context.MODE_PRIVATE);
 			} else {
 				return;

@@ -28,7 +28,7 @@ import com.ywxy.ca.entity.SumGradeInfo;
 import com.ywxy.ca.http.HttpUtil;
 import com.ywxy.ca.http.HttpUtil.HttpRequestCallback;
 import com.ywxy.ca.util.CacheUtil;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 import com.ywxy.ca.util.NetUtil;
 import com.ywxy.ca.util.ViewUtil;
 import com.ywxy.ca.view.FloatLabelEditText;
@@ -55,7 +55,7 @@ public class SignInActivity extends Activity {
 	}
 
 	private void doBackToHome() {
-		setResult(Constant.RESPONSE_FAIL_CODE);
+		setResult(Config.RESPONSE_FAIL_CODE);
 		finish();
 	}
 
@@ -171,24 +171,24 @@ public class SignInActivity extends Activity {
 						if (data instanceof SumGradeInfo) {
 							info.setSumGrade((SumGradeInfo) data);
 						} else if (data instanceof List) {
-							Log.d(Constant.LOG_TAG,
+							Log.d(Config.LOG_TAG,
 									"CollegeSemester onSuccess:"
 											+ ((List<CollegeSemester>) data)
 													.size());
 							info.setCollegeList((List<CollegeSemester>) data);
 						} else {
-							Log.d(Constant.LOG_TAG,
+							Log.d(Config.LOG_TAG,
 									"Map<String, SemesterGrade> onSuccess:"
 											+ ((Map<String, SemesterGrade>) data)
 													.size());
 							info.setFlag(false);
 							info.setSno(edt_sno.getText().toString());
 							info.setAllSemMap((Map<String, SemesterGrade>) data);
-							Log.d(Constant.LOG_TAG, "onSuccess"
+							Log.d(Config.LOG_TAG, "onSuccess"
 									+ info.getAllSemMap().size());
 							Intent intent = new Intent();
-							intent.putExtra(Constant.KEY_GET_NEW_STUDENT, info);
-							setResult(Constant.RESPONSE_SUC_CODE, intent);
+							intent.putExtra(Config.KEY_GET_NEW_STUDENT, info);
+							setResult(Config.RESPONSE_SUC_CODE, intent);
 							finish();
 						}
 					}

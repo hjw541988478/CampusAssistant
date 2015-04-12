@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ywxy.ca"
-    android:versionCode="1"
-    android:versionName="0.1.a 公测版" >
+    android:versionCode="2"
+    android:versionName="0.2" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="8"
         android:targetSdkVersion="22" />
 
     <!-- 必选 -->
@@ -56,14 +56,18 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.ywxy.ca.activity.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullScreenTheme" >
+            android:name="com.ywxy.ca.activity.TimetableActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ywxy.ca.activity.WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenTheme" >
         </activity>
     </application>
 

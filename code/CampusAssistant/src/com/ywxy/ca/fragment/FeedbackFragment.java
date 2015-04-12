@@ -20,7 +20,7 @@ import com.dd.processbutton.iml.SubmitProcessButton;
 import com.ywxy.ca.R;
 import com.ywxy.ca.http.HttpUtil;
 import com.ywxy.ca.http.HttpUtil.HttpRequestCallback;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 import com.ywxy.ca.util.NetUtil;
 import com.ywxy.ca.util.ViewUtil;
 

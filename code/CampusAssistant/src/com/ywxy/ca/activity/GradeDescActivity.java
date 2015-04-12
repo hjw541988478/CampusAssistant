@@ -23,7 +23,7 @@ import com.ywxy.ca.entity.SemesterGrade;
 import com.ywxy.ca.entity.StudentGradeInfo;
 import com.ywxy.ca.entity.SumGradeInfo;
 import com.ywxy.ca.http.HttpUtil;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 
 public class GradeDescActivity extends Activity implements
 		OnClickListener {
@@ -79,7 +79,7 @@ public class GradeDescActivity extends Activity implements
 		lb_point_avg_hint.setText(avg_point < 1.8 ? R.string.point_lessthan_1_8
 				: avg_point < 3.0 ? R.string.point_lessthan_3_0
 						: R.string.point_lessthan_5_0);
-		Log.d(Constant.LOG_TAG, "sum_fail_list:" + sumInfo.getNoPassList());
+		Log.d(Config.LOG_TAG, "sum_fail_list:" + sumInfo.getNoPassList());
 		adapter.setGradeList(sumInfo.getNoPassList());
 		adapter.setRed(true);
 		adapter.notifyDataSetChanged();
@@ -115,7 +115,7 @@ public class GradeDescActivity extends Activity implements
 		List<String> semsList = new ArrayList<String>();
 		List<String> keysList = new ArrayList<String>();
 		semsList.add("汇总");
-		Log.d(Constant.LOG_TAG, "terms.size" + listSemester.size());
+		Log.d(Config.LOG_TAG, "terms.size" + listSemester.size());
 		for (CollegeSemester item : listSemester) {
 			semsList.add(item.getSchoolYear()
 					+ (item.getSemester().equals("1") ? " 上学期" : " 下学期"));
@@ -127,7 +127,7 @@ public class GradeDescActivity extends Activity implements
 		for (int i = 0; i < keys.length; i++) {
 			sb.append(keys[i]);
 		}
-		Log.d(Constant.LOG_TAG, "keys," + sb.toString());
+		Log.d(Config.LOG_TAG, "keys," + sb.toString());
 	}
 
 	private String[] keys;
@@ -170,13 +170,13 @@ public class GradeDescActivity extends Activity implements
 
 	private void getData() {
 		currentStudentInfo = (StudentGradeInfo) data
-				.getSerializableExtra(Constant.KEY_STUDENT);
+				.getSerializableExtra(Config.KEY_STUDENT);
 		sumInfo = currentStudentInfo.getSumGrade();
 		listSemester = currentStudentInfo.getCollegeList();
 		setAllTerms();
-		Log.d(Constant.LOG_TAG, "real_size:"
+		Log.d(Config.LOG_TAG, "real_size:"
 				+ currentStudentInfo.getAllSemMap().size());
-		Log.d(Constant.LOG_TAG, "CollegeListSize:" + listSemester.size());
+		Log.d(Config.LOG_TAG, "CollegeListSize:" + listSemester.size());
 	}
 
 	@Override

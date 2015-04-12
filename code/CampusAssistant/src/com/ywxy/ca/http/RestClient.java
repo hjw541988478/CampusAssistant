@@ -3,7 +3,7 @@ package com.ywxy.ca.http;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 
 public class RestClient {
 
@@ -38,6 +38,6 @@ public class RestClient {
 	}
 
 	private static String getAbsoluteUrl(String relativeUrl) {
-		return Constant.API_BASE + relativeUrl;
+		return Config.API_BASE + relativeUrl;
 	}
 }

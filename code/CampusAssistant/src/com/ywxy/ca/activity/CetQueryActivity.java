@@ -25,7 +25,7 @@ import com.ywxy.ca.activity.SignInActivity.CustomLabelAnimator;
 import com.ywxy.ca.entity.CetScore;
 import com.ywxy.ca.http.HttpUtil;
 import com.ywxy.ca.http.HttpUtil.HttpRequestCallback;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 import com.ywxy.ca.util.NetUtil;
 import com.ywxy.ca.util.ViewUtil;
 import com.ywxy.ca.view.FloatLabelEditText;
@@ -143,7 +143,7 @@ public class CetQueryActivity extends Activity {
 							@Override
 							public void onSuccess(Object data) {
 								String result = (String) data;
-								Log.d(Constant.LOG_TAG, result);
+								Log.d(Config.LOG_TAG, result);
 								String[] results = result.split(",");
 								if (results.length == 7) {
 									btn_cet_query.post(new Runnable() {

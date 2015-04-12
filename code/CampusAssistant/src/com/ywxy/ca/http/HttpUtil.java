@@ -23,7 +23,7 @@ import com.loopj.android.http.RequestParams;
 import com.ywxy.ca.entity.CollegeSemester;
 import com.ywxy.ca.entity.SemesterGrade;
 import com.ywxy.ca.entity.SumGradeInfo;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 import com.ywxy.ca.util.JsonUtil;
 
 public class HttpUtil {
@@ -53,7 +53,7 @@ public class HttpUtil {
 				StringBuilder sb = new StringBuilder();
 				HttpURLConnection con = null;
 				try {
-					URL url = new URL(Constant.API_QUERY46);
+					URL url = new URL(Config.API_QUERY46);
 					con = (HttpURLConnection) url.openConnection();
 					con.setDoInput(true);
 					con.setDoOutput(true);
@@ -104,9 +104,9 @@ public class HttpUtil {
 
 	public void auth(Map<String, String> params,
 			final HttpRequestCallback callback) {
-		Log.d(Constant.LOG_TAG, "authing," + params.toString());
+		Log.d(Config.LOG_TAG, "authing," + params.toString());
 		authParams = params;
-		loopAuth(Constant.API_AUTH, params, callback);
+		loopAuth(Config.API_AUTH, params, callback);
 	}
 
 	public int index = 0;
@@ -115,19 +115,19 @@ public class HttpUtil {
 			final HttpRequestCallback callback) {
 		params.remove("userid");
 		params.remove("password");
-		Log.d(Constant.LOG_TAG, "getAllSchoolYear,"
-				+ Constant.API_GET_ALL_TERMS_GRADE + "," + params.toString());
-		RestClient.post(Constant.API_GET_ALL_TERMS_GRADE, new RequestParams(
+		Log.d(Config.LOG_TAG, "getAllSchoolYear,"
+				+ Config.API_GET_ALL_TERMS_GRADE + "," + params.toString());
+		RestClient.post(Config.API_GET_ALL_TERMS_GRADE, new RequestParams(
 				params), new JsonHttpResponseHandler() {
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					JSONObject response) {
-				Log.d(Constant.LOG_TAG, response.toString());
+				Log.d(Config.LOG_TAG, response.toString());
 				final Map<String, SemesterGrade> allList = new HashMap<String, SemesterGrade>();
 				List<CollegeSemester> semsterList = JsonUtil
 						.parseCollegeSemester(JSON.parseObject(response
 								.toString()));
-				Log.d(Constant.LOG_TAG, "SemesterList:" + semsterList);
+				Log.d(Config.LOG_TAG, "SemesterList:" + semsterList);
 				callback.onSuccess(semsterList);
 				final int size = semsterList.size();
 				for (int i = 0; i < semsterList.size(); i++) {
@@ -143,7 +143,7 @@ public class HttpUtil {
 							SemesterGrade temp = (SemesterGrade) data;
 							allList.put(temp.getAvgItem().getSchoolYear()
 									+ temp.getAvgItem().getSemester(), temp);
-							Log.d(Constant.LOG_TAG,
+							Log.d(Config.LOG_TAG,
 									"RealMapData:" + allList.size());
 							if (index == size) {
 								callback.onSuccess(allList);
@@ -152,7 +152,7 @@ public class HttpUtil {
 
 						@Override
 						public void onFail(Object data) {
-							Log.d(Constant.LOG_TAG,
+							Log.d(Config.LOG_TAG,
 									"getGrade" + data.toString());
 							callback.onFail(data.toString());
 						}
@@ -172,8 +172,8 @@ public class HttpUtil {
 
 	public void getSumAllGrade(final Map<String, String> params,
 			final HttpRequestCallback callback) {
-		Log.d(Constant.LOG_TAG, "getSumAll" + params.toString());
-		RestClient.post(Constant.API_GET_ALL_GRADE, new RequestParams(params),
+		Log.d(Config.LOG_TAG, "getSumAll" + params.toString());
+		RestClient.post(Config.API_GET_ALL_GRADE, new RequestParams(params),
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int statusCode, Header[] headers,
@@ -195,7 +195,7 @@ public class HttpUtil {
 	// 反馈
 	public void feedback(Map<String, String> params,
 			final HttpRequestCallback callback) {
-		RestClient.post(Constant.API_FEEDBACK, new RequestParams(params),
+		RestClient.post(Config.API_FEEDBACK, new RequestParams(params),
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int statusCode, Header[] headers,
@@ -222,8 +222,8 @@ public class HttpUtil {
 	// 登录
 	public void login(final Map<String, String> params,
 			final HttpRequestCallback callback) {
-		Log.d(Constant.LOG_TAG, "login" + params.toString());
-		RestClient.post(Constant.API_LOGIN, new RequestParams(params),
+		Log.d(Config.LOG_TAG, "login" + params.toString());
+		RestClient.post(Config.API_LOGIN, new RequestParams(params),
 				new JsonHttpResponseHandler() {
 
 					@Override
@@ -232,7 +232,7 @@ public class HttpUtil {
 						com.alibaba.fastjson.JSONObject obj = JSON
 								.parseObject(response.toString());
 						String res = JsonUtil.parseLoginInfo(obj);
-						Log.d(Constant.LOG_TAG, "res," + response.toString());
+						Log.d(Config.LOG_TAG, "res," + response.toString());
 						if (JsonUtil.parseLoginSuccess(obj)) {
 							// Map<String, String> param = new HashMap<String,
 							// String>();
@@ -255,8 +255,8 @@ public class HttpUtil {
 	// 获取学期详情成绩
 	public void getGrade(final Map<String, String> params,
 			final HttpRequestCallback callback) {
-		Log.d(Constant.LOG_TAG, "API_GET_GRADE" + params);
-		RestClient.post(Constant.API_GET_GRADE, new RequestParams(params),
+		Log.d(Config.LOG_TAG, "API_GET_GRADE" + params);
+		RestClient.post(Config.API_GET_GRADE, new RequestParams(params),
 				new JsonHttpResponseHandler() {
 					@Override
 					public void onSuccess(int statusCode, Header[] headers,
@@ -267,7 +267,7 @@ public class HttpUtil {
 								.parseSemesterAllGrade(obj);
 						if (data == null) {
 							callback.onFail("获取数据失败" + params.toString());
-							Log.d(Constant.LOG_TAG,
+							Log.d(Config.LOG_TAG,
 									"获取数据失败" + params.toString());
 						} else {
 							callback.onSuccess(data);
@@ -285,7 +285,7 @@ public class HttpUtil {
 	// 获取汇总信息
 	public void loopAuth(String relative_url, final Map<String, String> params,
 			final HttpRequestCallback callback) {
-		Log.d(Constant.LOG_TAG, "loopAuth," + params.toString());
+		Log.d(Config.LOG_TAG, "loopAuth," + params.toString());
 		RestClient.post(relative_url, new RequestParams(params),
 				new JsonHttpResponseHandler() {
 
@@ -297,7 +297,7 @@ public class HttpUtil {
 						Map<String, Object> data = JsonUtil.parseNextUrl(obj);
 						if (data.size() != 0) {
 							if (data.containsKey("getAllgrade")) {
-								Log.d(Constant.LOG_TAG, authParams.toString());
+								Log.d(Config.LOG_TAG, authParams.toString());
 								// 进行登录
 								login(authParams, callback);
 							} else {

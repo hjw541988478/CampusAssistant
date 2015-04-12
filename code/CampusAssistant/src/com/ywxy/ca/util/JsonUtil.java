@@ -73,7 +73,7 @@ public class JsonUtil {
 	}
 
 	public static Map<String, Object> parseNextUrl(JSONObject obj) {
-		Log.d(Constant.LOG_TAG, obj.toJSONString());
+		Log.d(Config.LOG_TAG, obj.toJSONString());
 		Map<String, Object> data = new HashMap<String, Object>();
 		boolean status = obj.getBoolean("status");
 		if (status) {

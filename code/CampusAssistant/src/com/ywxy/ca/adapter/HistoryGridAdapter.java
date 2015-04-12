@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.ywxy.ca.R;
 import com.ywxy.ca.entity.StudentGradeInfo;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 
 public class HistoryGridAdapter extends BaseAdapter {
 
@@ -40,7 +40,7 @@ public class HistoryGridAdapter extends BaseAdapter {
 
 	public void setDataList(List<StudentGradeInfo> list) {
 		mlist.clear();
-		Log.d(Constant.LOG_TAG, "addBoolean:" + mlist.addAll(list));
+		Log.d(Config.LOG_TAG, "addBoolean:" + mlist.addAll(list));
 	}
 
 	public HistoryGridAdapter(Context context) {

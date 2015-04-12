@@ -23,7 +23,7 @@ import com.ywxy.ca.adapter.HistoryGridAdapter;
 import com.ywxy.ca.adapter.HistoryGridAdapter.HistoryItemHolder;
 import com.ywxy.ca.entity.StudentGradeInfo;
 import com.ywxy.ca.util.CacheUtil;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 import com.ywxy.ca.util.ViewUtil;
 
 public class HistoryActivity extends Activity {
@@ -43,24 +43,24 @@ public class HistoryActivity extends Activity {
 		initViews();
 		setListener();
 		mDatalist = CacheUtil.getCache(this, StudentGradeInfo.class,
-				Constant.CACHE_FILE);
+				Config.CACHE_FILE);
 		adapter.setDataList(mDatalist);
 		adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
-		if (arg0 == Constant.REQUEST_ADD_CODE
-				&& arg1 == Constant.RESPONSE_SUC_CODE) {
+		if (arg0 == Config.REQUEST_ADD_CODE
+				&& arg1 == Config.RESPONSE_SUC_CODE) {
 			StudentGradeInfo info = (StudentGradeInfo) arg2
-					.getSerializableExtra(Constant.KEY_GET_NEW_STUDENT);
+					.getSerializableExtra(Config.KEY_GET_NEW_STUDENT);
 			List<StudentGradeInfo> list = adapter.getDataList();
 			list.add(info);
 			adapter.notifyDataSetChanged();
-			CacheUtil.setCache(this, list, Constant.CACHE_FILE);
-		} else if (arg0 == Constant.REQUEST_ADD_CODE
-				&& arg1 == Constant.RESPONSE_FAIL_CODE) {
-			Log.d(Constant.LOG_TAG, "fail to get new student");
+			CacheUtil.setCache(this, list, Config.CACHE_FILE);
+		} else if (arg0 == Config.REQUEST_ADD_CODE
+				&& arg1 == Config.RESPONSE_FAIL_CODE) {
+			Log.d(Config.LOG_TAG, "fail to get new student");
 		}
 	}
 
@@ -74,7 +74,7 @@ public class HistoryActivity extends Activity {
 	}
 
 	private void doBackToHome() {
-		setResult(Constant.RESPONSE_FAIL_CODE);
+		setResult(Config.RESPONSE_FAIL_CODE);
 		finish();
 	}
 
@@ -121,7 +121,7 @@ public class HistoryActivity extends Activity {
 								}
 							}
 							CacheUtil.setCache(HistoryActivity.this,
-									adapter.getDataList(), Constant.CACHE_FILE);
+									adapter.getDataList(), Config.CACHE_FILE);
 							adapter.notifyDataSetChanged();
 							// checkNum = 0;
 							unshowDeleteView();
@@ -137,7 +137,7 @@ public class HistoryActivity extends Activity {
 			public void onClick(View arg0) {
 				Intent intent = new Intent(HistoryActivity.this,
 						SignInActivity.class);
-				startActivityForResult(intent, Constant.REQUEST_ADD_CODE);
+				startActivityForResult(intent, Config.REQUEST_ADD_CODE);
 			}
 		});
 		gv_grade.setOnItemClickListener(new OnItemClickListener() {
@@ -153,8 +153,8 @@ public class HistoryActivity extends Activity {
 							.getItem(position);
 					Intent intent = new Intent(HistoryActivity.this,
 							GradeDescActivity.class);
-					Log.d(Constant.LOG_TAG, "item,onclick" + item.toString());
-					intent.putExtra(Constant.KEY_STUDENT, item);
+					Log.d(Config.LOG_TAG, "item,onclick" + item.toString());
+					intent.putExtra(Config.KEY_STUDENT, item);
 					startActivity(intent);
 				} else {
 					HistoryItemHolder holder = (HistoryItemHolder) arg1
@@ -175,7 +175,7 @@ public class HistoryActivity extends Activity {
 								.getColor(R.color.bg_blue));
 						checkNum--;
 					}
-					Log.d(Constant.LOG_TAG, "checkNum:" + checkNum);
+					Log.d(Config.LOG_TAG, "checkNum:" + checkNum);
 				}
 			}
 

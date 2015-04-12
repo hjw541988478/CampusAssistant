@@ -23,7 +23,7 @@ import com.ywxy.ca.fragment.BaseFragment.NavigationDrawerCallback;
 import com.ywxy.ca.fragment.DrawerFragment;
 import com.ywxy.ca.fragment.FeedbackFragment;
 import com.ywxy.ca.fragment.HomeFragment;
-import com.ywxy.ca.util.Constant;
+import com.ywxy.ca.util.Config;
 
 public class HomeActivity extends FragmentActivity implements
 		NavigationDrawerCallback {
