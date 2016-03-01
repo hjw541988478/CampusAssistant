@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ywxy.ca"
-    android:versionCode="2"
-    android:versionName="0.2" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ywxy.ca">
 
     <uses-sdk
         android:minSdkVersion="8"
