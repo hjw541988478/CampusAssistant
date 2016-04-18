@@ -7,6 +7,7 @@
 4. Drawer+RecyclerView+Tablayout+CardView改造
 5. Asp.Net框架ViewState参数处理
 6. Db层与Bmob层改造
+
 ## 主要功能
 #### 1.成绩查询
 包含了大学期间所有的成绩信息，包括`绩点`统计，未通过科目的显示，挂科提醒等；
@@ -19,7 +20,6 @@
 #### 5.图书查询
 图书馆书籍查询好帮手，包括`书籍借阅`情况查询等；
 #### 6.More
-...?
 
 ## 功能截图
 [<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_home.png" >](https://github.com/hjw541988478/CampusAssistant)[<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_table.png" >](https://github.com/hjw541988478/CampusAssistant)[<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_grade.png" >](https://github.com/hjw541988478/CampusAssistant)
