@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.login;
+package cn.edu.university.zfcms.biz.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -16,8 +16,8 @@ import android.widget.ImageView;
 
 import cn.edu.university.zfcms.R;
 import cn.edu.university.zfcms.base.BaseToolbarActivity;
-import cn.edu.university.zfcms.courses.CoursesActivity;
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.biz.courses.CoursesActivity;
+import cn.edu.university.zfcms.model.User;
 
 public class LoginActivity extends BaseToolbarActivity implements LoginContract.View{
 

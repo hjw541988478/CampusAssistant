@@ -1,6 +1,6 @@
 package cn.edu.university.zfcms.data.login.local;
 
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
 import cn.edu.university.zfcms.util.SpUtil;
 

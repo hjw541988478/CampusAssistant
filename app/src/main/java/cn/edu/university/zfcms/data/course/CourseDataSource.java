@@ -2,8 +2,7 @@ package cn.edu.university.zfcms.data.course;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobObject;
-import cn.edu.university.zfcms.data.model.Course;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.

@@ -7,7 +7,7 @@ import java.util.List;
 import cn.edu.university.zfcms.data.course.local.LocalCourseDataSource;
 import cn.edu.university.zfcms.data.course.remote.BmobCourseDataSource;
 import cn.edu.university.zfcms.data.course.remote.RemoteCourseDataSource;
-import cn.edu.university.zfcms.data.model.Course;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.

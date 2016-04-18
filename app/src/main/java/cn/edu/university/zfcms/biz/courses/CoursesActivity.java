@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.courses;
+package cn.edu.university.zfcms.biz.courses;
 
 import android.content.Context;
 import android.content.Intent;

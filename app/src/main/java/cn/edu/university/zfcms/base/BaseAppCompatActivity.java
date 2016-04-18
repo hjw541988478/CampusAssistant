@@ -1,8 +1,5 @@
 package cn.edu.university.zfcms.base;
 
-/**
- * Created by hjw on 16/4/16.
- */
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

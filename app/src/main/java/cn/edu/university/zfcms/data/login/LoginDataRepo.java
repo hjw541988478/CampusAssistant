@@ -1,6 +1,6 @@
 package cn.edu.university.zfcms.data.login;
 
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.model.User;
 
 /**
  * Created by hjw on 16/4/15.

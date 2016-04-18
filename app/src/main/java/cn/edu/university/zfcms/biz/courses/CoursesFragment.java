@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.courses;
+package cn.edu.university.zfcms.biz.courses;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +11,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.edu.university.zfcms.R;
 import cn.edu.university.zfcms.base.BaseFragment;
-import cn.edu.university.zfcms.data.course.remote.RemoteRawCourse;
-import cn.edu.university.zfcms.data.model.Course;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.

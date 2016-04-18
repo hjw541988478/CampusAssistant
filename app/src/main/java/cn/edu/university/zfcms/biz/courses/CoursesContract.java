@@ -1,11 +1,10 @@
-package cn.edu.university.zfcms.courses;
+package cn.edu.university.zfcms.biz.courses;
 
 import java.util.List;
 
 import cn.edu.university.zfcms.base.mvp.BasePresenter;
 import cn.edu.university.zfcms.base.mvp.BaseView;
-import cn.edu.university.zfcms.data.model.Course;
-import cn.edu.university.zfcms.data.course.remote.RemoteRawCourse;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.

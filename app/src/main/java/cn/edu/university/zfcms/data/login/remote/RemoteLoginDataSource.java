@@ -12,9 +12,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.edu.university.zfcms.login.LoginContract;
+import cn.edu.university.zfcms.biz.login.LoginContract;
 import cn.edu.university.zfcms.http.HttpManager;
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
 import cn.edu.university.zfcms.http.IOpCallback;
 import cn.edu.university.zfcms.parser.LoginParser;

@@ -1,10 +1,10 @@
-package cn.edu.university.zfcms.login;
+package cn.edu.university.zfcms.biz.login;
 
 import android.graphics.Bitmap;
 
 import cn.edu.university.zfcms.base.mvp.BasePresenter;
 import cn.edu.university.zfcms.base.mvp.BaseView;
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.model.User;
 
 /**
  * Created by hjw on 16/4/15.

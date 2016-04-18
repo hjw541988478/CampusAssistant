@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.data.model;
+package cn.edu.university.zfcms.model;
 
 import cn.bmob.v3.BmobUser;
 

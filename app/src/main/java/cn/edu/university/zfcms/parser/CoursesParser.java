@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cn.edu.university.zfcms.courses.CoursesContract;
-import cn.edu.university.zfcms.data.model.BasicCourse;
-import cn.edu.university.zfcms.data.model.Course;
+import cn.edu.university.zfcms.biz.courses.CoursesContract;
+import cn.edu.university.zfcms.model.BasicCourse;
+import cn.edu.university.zfcms.model.Course;
 import cn.edu.university.zfcms.data.course.remote.RemoteRawCourse;
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.util.SpUtil;
 import cn.edu.university.zfcms.util.Util;
 

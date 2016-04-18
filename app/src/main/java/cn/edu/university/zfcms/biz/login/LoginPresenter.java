@@ -1,8 +1,8 @@
-package cn.edu.university.zfcms.login;
+package cn.edu.university.zfcms.biz.login;
 
 import android.graphics.Bitmap;
 
-import cn.edu.university.zfcms.data.model.User;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.login.LoginDataRepo;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
 import cn.edu.university.zfcms.data.login.local.LocalLoginDataSource;

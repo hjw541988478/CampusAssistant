@@ -11,8 +11,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.edu.university.zfcms.data.model.Course;
-import cn.edu.university.zfcms.data.model.BasicCourse;
+import cn.edu.university.zfcms.model.Course;
+import cn.edu.university.zfcms.model.BasicCourse;
 import cn.edu.university.zfcms.data.course.CourseDataSource;
 
 /**
