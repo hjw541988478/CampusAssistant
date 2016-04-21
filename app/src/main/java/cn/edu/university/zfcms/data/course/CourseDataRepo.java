@@ -41,9 +41,20 @@ public class CourseDataRepo implements CourseDataSource{
                 // 缓存到服务器和 DB
                 if (!remoteRawCourses.isEmpty()) {
                     localCourseData.saveTimetableCourses(remoteRawCourses);
-                    bmobRemoteData.saveTimetableCourses(remoteRawCourses);
+
+                    localCourseData.loadRawCourses(new LoadCoursesCallback() {
+                        @Override
+                        public void onCoursesLoaded(List<Course> remoteRawCourses) {
+                            bmobRemoteData.saveTimetableCourses(remoteRawCourses);
+                            callback.onCoursesLoaded(remoteRawCourses);
+                        }
+
+                        @Override
+                        public void onDataError() {
+                            callback.onDataError();
+                        }
+                    });
                 }
-                callback.onCoursesLoaded(remoteRawCourses);
             }
 
             @Override

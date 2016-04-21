@@ -11,12 +11,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.edu.university.zfcms.biz.courses.CoursesContract;
-import cn.edu.university.zfcms.model.BasicCourse;
 import cn.edu.university.zfcms.model.Course;
-import cn.edu.university.zfcms.data.course.remote.RemoteRawCourse;
 import cn.edu.university.zfcms.model.User;
-import cn.edu.university.zfcms.util.SpUtil;
-import cn.edu.university.zfcms.util.Util;
+import cn.edu.university.zfcms.util.PreferenceUtil;
+import cn.edu.university.zfcms.util.StringUtil;
 
 /**
  * Created by hjw on 16/4/16.
@@ -33,41 +31,41 @@ public class CoursesParser implements CoursesContract.Parser{
     private static final String PATTERN_WEEKS = "\\{第([1-9]|([1-2][0-9]))\\-([1-9]|([1-2][0-9]))周*(\\|[单双]周)?\\}";
 
     // 解析课程上课时间的细节内容
-    private void parseCourseWhenToStartText(RemoteRawCourse remoteRawCourse, String courseWhenText) {
+    private void parseCourseWhenToStartText(Course course, String courseWhenText) {
         Matcher courseWhenMatcher = Pattern.compile(PATTERN_COURSE_WHEN_TO_START).matcher(courseWhenText);
         if (courseWhenMatcher.matches()) {
-            parseDayOfWhen(remoteRawCourse,courseWhenText);
-            parseDurationSections(remoteRawCourse,courseWhenText);
-            parseWeeks(remoteRawCourse,courseWhenText);
+            parseDayOfWhen(course, courseWhenText);
+            parseDurationSections(course, courseWhenText);
+            parseWeeks(course, courseWhenText);
         }
     }
 
     // 解析周几
-    private void parseDayOfWhen(RemoteRawCourse remoteRawCourse, String text) {
+    private void parseDayOfWhen(Course course, String text) {
         Matcher  matcher = Pattern.compile(PATTERN_DAY_OF_WEEK).matcher(text);
         while (matcher.find()) {
-            remoteRawCourse.courseDayOfWeek = matcher.group();
+            course.dayOfWeek = matcher.group();
             break;
         }
     }
 
     // 解析上课节数 周五第3,4,5节{第1-1周|单周}
-    private void parseDurationSections(RemoteRawCourse remoteRawCourse, String text) {
+    private void parseDurationSections(Course course, String text) {
         int firstIndex = text.indexOf("第");
         int lastIndex = text.indexOf("节");
         String courseSections = text.substring(firstIndex + 1,lastIndex);
         if (courseSections.length() == 1) {
-            remoteRawCourse.courseWhichSectionStart = Integer.parseInt(courseSections);
-            remoteRawCourse.courseSectionsDuration = 0;
+            course.whichSectionStart = Integer.parseInt(courseSections);
+            course.whichSectionEnd = 0;
         } else {
             String[] courseSpiltSections = courseSections.split(",");
-            remoteRawCourse.courseWhichSectionStart = Integer.parseInt(courseSpiltSections[0]);
+            course.whichSectionStart = Integer.parseInt(courseSpiltSections[0]);
             int lastCourseSection = Integer.parseInt(courseSpiltSections[courseSpiltSections.length - 1]);
-            remoteRawCourse.courseSectionsDuration = lastCourseSection - remoteRawCourse.courseWhichSectionStart < 1 ? 1 : lastCourseSection;
+            course.whichSectionEnd = lastCourseSection;
         }
     }
 
-    private void refreshCourseWeeks(RemoteRawCourse remoteRawCourse, int startWeekNo, int endWeekNo , boolean isContinus, boolean isOddWeekNo) {
+    private void refreshCourseWeeks(Course course, int startWeekNo, int endWeekNo, boolean isContinus, boolean isOddWeekNo) {
         int curWeekNo ;
         for (int index = startWeekNo ; index <= endWeekNo ; index ++) {
             if (isContinus) {
@@ -87,11 +85,14 @@ public class CoursesParser implements CoursesContract.Parser{
                     }
                 }
             }
-            remoteRawCourse.courseTargetStartWeeks.add(curWeekNo);
+            if (course.weeks == null) {
+                course.weeks = new ArrayList<>();
+            }
+            course.weeks.add(String.valueOf(curWeekNo));
         }
     }
 
-    private void parseWeeks(RemoteRawCourse remoteRawCourse, String text) {
+    private void parseWeeks(Course remoteRawCourse, String text) {
         Matcher matcher = Pattern.compile(PATTERN_WEEKS).matcher(text);
         while (matcher.find()) {
             int startPos = matcher.group().indexOf("第");
@@ -137,14 +138,14 @@ public class CoursesParser implements CoursesContract.Parser{
             Element collegeElement = loadCoursesDoc.getElementById("Label7");
             Element majorElement = loadCoursesDoc.getElementById("Label8");
             Element classElement = loadCoursesDoc.getElementById("Label9");
-            User loginUser = SpUtil.getLoginUser();
+            User loginUser = PreferenceUtil.getLoginUser();
             loginUser.userCollege = collegeElement != null && collegeElement.hasText()
-                    ? Util.parseUserFieldTextHtml(collegeElement.text(),3,0) : "";
+                    ? StringUtil.parseUserFieldTextHtml(collegeElement.text(), 3, 0) : "";
             loginUser.userMajor = majorElement != null && majorElement.hasText()
-                    ? Util.parseUserFieldTextHtml(majorElement.text(),3,0) : "";
+                    ? StringUtil.parseUserFieldTextHtml(majorElement.text(), 3, 0) : "";
             loginUser.userClass = classElement != null && classElement.hasText()
-                    ? Util.parseUserFieldTextHtml(classElement.text(),4,0) : "";
-            SpUtil.saveLoginUser(loginUser);
+                    ? StringUtil.parseUserFieldTextHtml(classElement.text(), 4, 0) : "";
+            PreferenceUtil.updateLoginUser(loginUser);
         }
         return isFectchSuccess;
     }
@@ -161,18 +162,15 @@ public class CoursesParser implements CoursesContract.Parser{
                 while (matcher.find()) {
                     String[] matchedTexts = matcher.group().split("\\s+");
                     if (matchedTexts.length >= FEATURE_GENEREAL_COURSE) {
-                        RemoteRawCourse remoteRawCourse = new RemoteRawCourse();
-                        BasicCourse basicCourse = new BasicCourse();
-                        basicCourse.setCourseName(matchedTexts[0]);
-                        basicCourse.setWhereTeach(matchedTexts[3]);
-                        basicCourse.setWhoTeach(matchedTexts[2]);
-                        remoteRawCourse.courseBasicInfo = basicCourse;
-                        remoteRawCourse.rawCourseWhenToTeach = matchedTexts[1];
-                        parseCourseWhenToStartText(remoteRawCourse,matchedTexts[1]);
+                        Course course = new Course();
+                        course.courseName = matchedTexts[0];
+                        course.whereTeach = matchedTexts[3];
+                        course.whoTeach = matchedTexts[2];
+                        parseCourseWhenToStartText(course, matchedTexts[1]);
                         if (matchedTexts.length >= 5) {
-                            remoteRawCourse.rawCourseAdjustedNo = matchedTexts[4];
+                            course.adjustCourseNo = matchedTexts[4];
                         }
-                        remoteRawCourses.add(remoteRawCourse);
+                        remoteRawCourses.add(course);
                     }
                 }
             }

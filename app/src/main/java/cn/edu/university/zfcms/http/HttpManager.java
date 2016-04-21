@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.edu.university.zfcms.util.SpUtil;
+import cn.edu.university.zfcms.util.PreferenceUtil;
 
 /**
  * Created by hjw on 16/4/14.
@@ -43,7 +43,7 @@ public class HttpManager {
 
     // 众多 post 请求需要带上状态请求头
     private static void buildViewStateParam(List<NameValuePair> paramPairs){
-        paramPairs.add(new BasicNameValuePair("__VIEWSTATE", SpUtil.getNewerStateHeaderVal()));
+        paramPairs.add(new BasicNameValuePair("__VIEWSTATE", PreferenceUtil.getLoginViewStateParam()));
     }
 
     public static HttpPost post(String url, Map<String,String> params, Map<String,String> headers){
@@ -75,7 +75,8 @@ public class HttpManager {
     }
 
 
-    public static boolean isRequestSuccessful(int code) {
+    public static boolean isRequestSuccessful(HttpResponse httpResp) {
+        int code = httpResp.getStatusLine().getStatusCode();
         return code >= 200 && code < 300;
     }
 
@@ -83,11 +84,10 @@ public class HttpManager {
         String result = "";
         try {
             if (response != null) {
-                int statusCode = response.getStatusLine().getStatusCode();
-                if (isRequestSuccessful(statusCode)) {
+                if (isRequestSuccessful(response)) {
                     result = EntityUtils.toString(response.getEntity(), CHARSET_DEFAULT);
                 } else {
-                    result = "status code:" + statusCode + ",request failure.";
+                    result = "status code:" + response.getStatusLine().getStatusCode() + ",request failure.";
                 }
             }
         } catch (IOException e) {

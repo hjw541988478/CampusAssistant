@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.edu.university.zfcms.base.func.BaseDataSource;
 import cn.edu.university.zfcms.biz.courses.CoursesContract;
 import cn.edu.university.zfcms.model.Course;
 import cn.edu.university.zfcms.http.HttpManager;
 import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.course.CourseDataSource;
 import cn.edu.university.zfcms.parser.CoursesParser;
-import cn.edu.university.zfcms.util.SpUtil;
+import cn.edu.university.zfcms.util.PreferenceUtil;
 import cn.edu.university.zfcms.util.ThreadPoolUtil;
 
 /**
@@ -24,8 +25,6 @@ import cn.edu.university.zfcms.util.ThreadPoolUtil;
 public class RemoteCourseDataSource implements CourseDataSource {
 
     private static final String tag = RemoteCourseDataSource.class.getSimpleName();
-
-    private static final String URL_COURSE_LOAD = "http://210.34.213.88/xskbcx.aspx?xh=%s&xm=%s&gnmkdm=N121603";
 
     private static RemoteCourseDataSource INSTANCE ;
 
@@ -44,8 +43,9 @@ public class RemoteCourseDataSource implements CourseDataSource {
 
     private String loadAllCourses(User user){
         Map<String,String> headers = new HashMap<>();
-        headers.put("Referer",String.format("http://210.34.213.88/xs_main.aspx?xh=%s",user.userId));
-        HttpUriRequest courseLoadRequest = HttpManager.get(String.format(URL_COURSE_LOAD,user.userId,user.userName),headers);
+        headers.put("Referer", String.format(BaseDataSource.URL_INDEX_PAGE, user.userId));
+        HttpUriRequest courseLoadRequest = HttpManager.get(
+                String.format(BaseDataSource.URL_PERSONAL_COURSES_QUERY, user.userId, user.userRealName), headers);
         HttpResponse courseLoadResp = HttpManager.performRequest(courseLoadRequest);
         return HttpManager.parseStringResponse(courseLoadResp);
     }
@@ -66,7 +66,7 @@ public class RemoteCourseDataSource implements CourseDataSource {
 
         @Override
         public void run() {
-            String courseHtml = loadAllCourses(SpUtil.getLoginUser());
+            String courseHtml = loadAllCourses(PreferenceUtil.getLoginUser());
             Log.d(tag,"loading all courses raw html :" + courseHtml);
             if (parser.isPersonalCoursesPage(courseHtml)) {
                 callback.onCoursesLoaded(parseHtmlCourses(courseHtml));

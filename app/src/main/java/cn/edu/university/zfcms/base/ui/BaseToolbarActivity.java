@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.base;
+package cn.edu.university.zfcms.base.ui;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +52,12 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
     protected void showBack() {
         if (this.mActionBarHelper != null)
             this.mActionBarHelper.setDisplayHomeAsUpEnabled(true);
+    }
+
+    protected void hideBack() {
+        if (this.mActionBarHelper != null) {
+            this.mActionBarHelper.setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     protected void setAppBarLayoutAlpha(float alpha) {this.mAppBarLayout.setAlpha(alpha);}

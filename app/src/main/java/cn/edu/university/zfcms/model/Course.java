@@ -1,43 +1,62 @@
 package cn.edu.university.zfcms.model;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
 
 /**
  * Created by hjw on 16/4/15.
  */
 public class Course extends BmobObject{
-    public String timeCourseId;
-    // 第几课开始
-    public int courseWhichSectionStart;
-    // 持续几节课
-    public int courseSectionsDuration;
-    // 第几周
-    public int courseWeekNo;
+    // ID
+    public int timeId;
+    // 第几节课开始
+    public int whichSectionStart;
+    // 第几节课结束
+    public int whichSectionEnd;
+    // 哪些周上
+    public List<String> weeks;
     // 周几
-    public String courseDayOfWeek;
-    // 在哪上啥时候上上的啥课
-    public BasicCourse courseBasicInfo;
+    public String dayOfWeek;
+    // 课程名
+    public String courseName;
+    // 老师
+    public String whoTeach;
+    // 在哪上
+    public String whereTeach;
+    // 如果有调休
+    public String adjustCourseNo;
+    // 学年
+    public String year;
+    // 学期
+    public String term;
 
-    public Course() {}
+    public Course() {
+//        this.setTableName("timetable");
+    }
 
-    public Course(String timeCourseId, BasicCourse course, int courseWeekNo, int courseWhichSectionStart, int courseSectionsDuration, String courseDayOfWeek) {
-        this.timeCourseId = timeCourseId;
-        this.courseBasicInfo = course;
-        this.courseWhichSectionStart = courseWhichSectionStart;
-        this.courseSectionsDuration = courseSectionsDuration;
-        this.courseDayOfWeek = courseDayOfWeek;
-        this.courseWeekNo = courseWeekNo;
+    public Course(int timeId, int whichSectionStart, int whichSectionEnd, List<String> weeks, String dayOfWeek, String courseName, String whoTeach, String whereTeach) {
+        this.timeId = timeId;
+        this.whichSectionStart = whichSectionStart;
+        this.whichSectionEnd = whichSectionEnd;
+        this.weeks = weeks;
+        this.dayOfWeek = dayOfWeek;
+        this.courseName = courseName;
+        this.whoTeach = whoTeach;
+        this.whereTeach = whereTeach;
     }
 
     @Override
     public String toString() {
         return "Course{" +
-                "timeCourseId='" + timeCourseId + '\'' +
-                ", courseWhichSectionStart=" + courseWhichSectionStart +
-                ", courseSectionsDuration=" + courseSectionsDuration +
-                ", courseWeekNo=" + courseWeekNo +
-                ", courseDayOfWeek='" + courseDayOfWeek + '\'' +
-                ", courseBasicInfo=" + courseBasicInfo +
+                "timeId=" + timeId +
+                ", whichSectionStart=" + whichSectionStart +
+                ", whichSectionEnd=" + whichSectionEnd +
+                ", weeks=" + weeks +
+                ", dayOfWeek='" + dayOfWeek + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", whoTeach='" + whoTeach + '\'' +
+                ", whereTeach='" + whereTeach + '\'' +
                 '}';
     }
 }

@@ -33,7 +33,6 @@
             android:id="@+id/inquiry_electric_checkcode"
             android:layout_width="120dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_default_checkcode"
             android:layout_height="80dp" />
         <EditText
             android:id="@+id/inquiry_electric_text"

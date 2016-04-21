@@ -46,7 +46,7 @@ public class BmobCourseDataSource implements CourseDataSource{
     public void getLocalWeekTimetableCourses(int currentWeekNo, final LoadCoursesCallback callback) {
         BmobQuery<Course> weekCourseQuery = new BmobQuery<>();
         weekCourseQuery.addWhereContains(
-                CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEK_NO,String.valueOf(currentWeekNo));
+                CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS, String.valueOf(currentWeekNo));
         weekCourseQuery.findObjects(mContext, new FindListener<Course>() {
             @Override
             public void onSuccess(List<Course> list) {

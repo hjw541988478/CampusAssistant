@@ -3,8 +3,12 @@ package cn.edu.university.zfcms.base;
 import android.app.Application;
 import android.util.Log;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import cn.bmob.v3.Bmob;
-import cn.edu.university.zfcms.util.SpUtil;
+import cn.edu.university.zfcms.base.func.Config;
+import cn.edu.university.zfcms.http.HttpManager;
+import cn.edu.university.zfcms.util.PreferenceUtil;
 
 /**
  * APP
@@ -17,9 +21,10 @@ public class ZfsoftCampusAsstApp extends Application{
     public void onCreate() {
         super.onCreate();
         Log.d(tag,"CampusAsstApp is initializing...");
-        SpUtil.init(getApplicationContext());
+        PreferenceUtil.init(getApplicationContext());
 
-        Bmob.initialize(this,Config.BMOB_APP_ID);
+        LeakCanary.install(this);
+        Bmob.initialize(this, Config.BMOB_APP_ID);
     }
 
 

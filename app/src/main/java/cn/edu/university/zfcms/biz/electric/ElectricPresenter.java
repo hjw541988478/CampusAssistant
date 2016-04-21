@@ -1,38 +1,33 @@
 package cn.edu.university.zfcms.biz.electric;
 
-import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.edu.university.zfcms.biz.login.LoginContract;
 import cn.edu.university.zfcms.data.electric.ElectricRequestModel;
-import cn.edu.university.zfcms.data.login.LoginDataRepo;
-import cn.edu.university.zfcms.data.login.LoginDataSource;
-import cn.edu.university.zfcms.data.login.local.LocalLoginDataSource;
-import cn.edu.university.zfcms.data.login.remote.RemoteLoginDataSource;
 import cn.edu.university.zfcms.http.HttpManager;
-import cn.edu.university.zfcms.model.User;
+import cn.edu.university.zfcms.model.ElectricCharge;
+import cn.edu.university.zfcms.util.ThreadPoolUtil;
 
 /**
  * Created by hjw on 16/4/15.
@@ -48,47 +43,79 @@ public class ElectricPresenter implements ElectricChargeContract.Presenter {
 
     @Override
     public void start() {
-
+        loadCheckcode();
     }
 
     @Override
-    public void loadElectricInquiryResult(String checkCode) {
-        HttpPost post = new HttpPost("http://218.75.197.120:8021/XSCK/Login_Students.aspx");
-        Map<String,String> headers = buildElectricInquiryHeaders();
-        for (Map.Entry<String,String> entry: headers.entrySet()) {
-            post.setHeader(entry.getKey(),entry.getValue());
-        }
-        List<BasicNameValuePair> pairs = new ArrayList<>();
-        Map<String,String> params = buildElectricInquiryParams(buildRequestMode(checkCode));
-        for (Map.Entry<String , String> entry : params.entrySet()) {
-            pairs.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
-        }
-        try {
-            post.setEntity(new UrlEncodedFormEntity(pairs, "utf-8"));
-            HttpResponse response = client.execute(post);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                Log.d("electric" , EntityUtils.toString(response.getEntity()));
-            } else  {
-                Log.d("electric" , "electric inquiry failure : "+ response.getStatusLine().getStatusCode());
+    public void loadElectricInquiryResult(final String checkCode) {
+        ThreadPoolUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                HttpPost post = new HttpPost("http://218.75.197.120:8021/XSCK/Login_Students.aspx");
+                Map<String, String> headers = buildElectricInquiryHeaders();
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    post.setHeader(entry.getKey(), entry.getValue());
+                }
+                List<BasicNameValuePair> pairs = new ArrayList<>();
+                Map<String, String> params = buildElectricInquiryParams(buildRequestModel(checkCode));
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    pairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
+                try {
+                    post.setEntity(new UrlEncodedFormEntity(pairs, "utf-8"));
+                    HttpResponse response = client.execute(post);
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        uiHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                electricView.showInquirySuccess(new ElectricCharge());
+                            }
+                        });
+                        Log.d("electric", EntityUtils.toString(response.getEntity()));
+                    } else {
+                        uiHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                electricView.showInquiryError("electric inquiry failure");
+                            }
+                        });
+                        Log.d("electric", "electric inquiry failure : " + response.getStatusLine().getStatusCode());
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        });
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+    private String parseParamsHeader(Document doc, String key) {
+        Elements elements = doc.getElementsByTag("input");
+        for (Element element : elements) {
+            if (key.equals(element.attr("name"))) {
+                return element.val();
+            }
         }
+        return "";
     }
 
-    private void parseEletricRequestModel(String html , ElectricRequestModel model) {
+    private void parseElectricRequestModel(String html, ElectricRequestModel model) {
         Document document = Jsoup.parse(html);
-        model.aspxTreeEv = document.getElementById("ASPxPopupControl1$ASPxTreeList1$STATE").val();
+        model.aspxTreeState = parseParamsHeader(document, "ASPxPopupControl1$ASPxTreeList1$STATE");
+        model.aspxTreeKey = parseParamsHeader(document, "ASPxPopupControl1$ASPxTreeList1$FKey");
+        model.aspxWs = parseParamsHeader(document, "ASPxPopupControl1WS");
+        model.aspxViewState = parseParamsHeader(document, "__VIEWSTATE");
+        model.aspxValidation = parseParamsHeader(document, "__EVENTVALIDATION");
     }
-    private ElectricRequestModel buildRequestMode(String checkCode){
+
+    private ElectricRequestModel buildRequestModel(String checkCode) {
         ElectricRequestModel model = new ElectricRequestModel();
         model.roomCheckCode = checkCode;
         HttpGet get = new HttpGet("http://218.75.197.120:8021/XSCK/Login_Students.aspx");
         try {
             HttpResponse resp = client.execute(get);
             if (resp.getStatusLine().getStatusCode() == 200) {
-                parseEletricRequestModel(EntityUtils.toString(resp.getEntity(),"utf-8"),model);
+                parseElectricRequestModel(EntityUtils.toString(resp.getEntity(), "utf-8"), model);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,7 +125,45 @@ public class ElectricPresenter implements ElectricChargeContract.Presenter {
 
     @Override
     public void loadCheckcode() {
-
+        ThreadPoolUtil.execute(new Runnable() {
+            @Override
+            public void run() {
+                byte[] checkCodeBytes = null;
+                try {
+                    HttpGet loadCheckCodeRequest = new HttpGet("http://218.75.197.120:8021/CheckImage.aspx");
+                    HttpResponse loadChkCodeResp = client.execute(loadCheckCodeRequest);
+                    if (HttpManager.isRequestSuccessful(loadChkCodeResp)) {
+                        InputStream entityStream = loadChkCodeResp.getEntity().getContent();
+                        ByteArrayOutputStream entityOutStream = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int len = 0;
+                        while ((len = entityStream.read(buffer)) != -1) {
+                            entityOutStream.write(buffer, 0, len);
+                        }
+                        entityOutStream.flush();
+                        checkCodeBytes = entityOutStream.toByteArray();
+                        final byte[] finalCheckCodeBytes = checkCodeBytes;
+                        uiHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                electricView.showCheckcode(BitmapFactory.decodeByteArray(
+                                        finalCheckCodeBytes, 0, finalCheckCodeBytes.length));
+                            }
+                        });
+                        entityStream.close();
+                        entityOutStream.close();
+                    }
+                } catch (Exception e) {
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            electricView.showInquiryError("加载验证码失败");
+                        }
+                    });
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private static HttpClient client = new DefaultHttpClient();

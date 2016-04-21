@@ -12,13 +12,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.edu.university.zfcms.base.func.ErrDef;
 import cn.edu.university.zfcms.biz.login.LoginContract;
 import cn.edu.university.zfcms.http.HttpManager;
+import cn.edu.university.zfcms.http.common.CommonDataRepo;
+import cn.edu.university.zfcms.http.common.CommonDataSource;
 import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
-import cn.edu.university.zfcms.http.IOpCallback;
 import cn.edu.university.zfcms.parser.LoginParser;
-import cn.edu.university.zfcms.util.SpUtil;
 import cn.edu.university.zfcms.util.ThreadPoolUtil;
 
 /**
@@ -27,41 +28,19 @@ import cn.edu.university.zfcms.util.ThreadPoolUtil;
 public class RemoteLoginDataSource implements LoginDataSource{
     private static final String tag = RemoteLoginDataSource.class.getSimpleName();
 
-    public static final String URL_LOGIN = "http://210.34.213.88/default2.aspx";
-
-    public static final String URL_LOAD_CHECKCODE = "http://210.34.213.88/CheckCode.aspx";
-
     private LoginContract.Parser parser;
+    private CommonDataSource commonDataSource;
 
-    private static RemoteLoginDataSource INSTANCE;
-
-    private RemoteLoginDataSource(){
+    public RemoteLoginDataSource() {
         parser = new LoginParser();
-    }
-
-    public static RemoteLoginDataSource getInstance(){
-        if (INSTANCE == null) {
-            INSTANCE = new RemoteLoginDataSource();
-        }
-        return INSTANCE;
-    }
-
-
-    /**
-     * 获取新的__VIEWSTATE
-     * @return
-     */
-    private String getNewerStateHeader(){
-        HttpUriRequest request = HttpManager.get(URL_LOGIN, new HashMap<String, String>());
-        HttpResponse response = HttpManager.performRequest(request);
-        return HttpManager.parseStringResponse(response);
+        commonDataSource = new CommonDataRepo();
     }
 
     /**
      * 登录
      */
-    private String login(User user){
-        Map<String,String> params = buildLoginParams(user.userId,user.userPswd,user.checkCode);
+    private String login(User user, String checkCode) {
+        Map<String, String> params = buildLoginParams(user.userId, user.userPswd, checkCode);
         HttpUriRequest loginRequest = HttpManager.post(URL_LOGIN,params,new HashMap<String, String>());
         HttpResponse loginResp = HttpManager.performRequest(loginRequest);
         return HttpManager.parseStringResponse(loginResp);
@@ -74,9 +53,9 @@ public class RemoteLoginDataSource implements LoginDataSource{
     private byte[] loadCheckCode(){
         byte[] checkCodeBytes = null;
         try {
-            HttpUriRequest loadCheckCodeRequest = HttpManager.get(URL_LOAD_CHECKCODE,new HashMap<String, String>());
+            HttpUriRequest loadCheckCodeRequest = HttpManager.get(URL_CHECKCODE_LOAD, new HashMap<String, String>());
             HttpResponse loadChkCodeResp = HttpManager.performRequest(loadCheckCodeRequest);
-            if (HttpManager.isRequestSuccessful(loadChkCodeResp.getStatusLine().getStatusCode())) {
+            if (HttpManager.isRequestSuccessful(loadChkCodeResp)) {
                 InputStream entityStream = loadChkCodeResp.getEntity().getContent();
                 ByteArrayOutputStream entityOutStream = new ByteArrayOutputStream();
                 byte[] buffer = new byte[1024];
@@ -123,7 +102,6 @@ public class RemoteLoginDataSource implements LoginDataSource{
 
         @Override
         public void run() {
-            Log.d(tag,"login checkcode reloading ...");
             byte[] checkcodeBytes = loadCheckCode();
             if (parser.isCheckCodeLoadSuccessful(checkcodeBytes)) {
                 Bitmap checkcodeBitmap = BitmapFactory.decodeByteArray(checkcodeBytes,0,checkcodeBytes.length);
@@ -136,68 +114,45 @@ public class RemoteLoginDataSource implements LoginDataSource{
         }
     }
 
-    private class NewerStateHeaderTask implements Runnable {
-
-        IOpCallback callback;
-
-        public NewerStateHeaderTask(IOpCallback callback){
-            this.callback = callback;
-        }
-
-        @Override
-        public void run() {
-            Log.d(tag,"login new state header loading ...");
-            String rawHtml = getNewerStateHeader();
-            String newerHeader = parser.parseViewStateParam(rawHtml);
-            if (!newerHeader.isEmpty()) {
-                SpUtil.saveNewerStateHeader(newerHeader);
-                callback.onResp();
-            } else {
-                callback.onError("get newer state header error,please check manually");
-                Log.e(tag,"get newer state header error,please check manually :\n" + rawHtml);
-            }
-        }
-    }
-
-
     private class UserLoginTask implements Runnable {
 
         private GetLoginDataCallback callback;
         private User user;
+        private String checkCode;
 
-        public UserLoginTask(User user,GetLoginDataCallback callback) {
+        public UserLoginTask(User user, String checkCode, GetLoginDataCallback callback) {
+            this.checkCode = checkCode;
             this.user = user;
             this.callback = callback;
         }
 
         @Override
         public void run() {
-            String loginContent = login(user);
+            String loginContent = login(user, checkCode);
             if (parser.isLoginSuccessful(user,loginContent)){
                 Log.d(tag,"user login successfully , userinfo :" + user.toString());
                 callback.onGetLoginData(user);
             } else {
                 Log.d(tag, "user login failed .");
-                if (parser.isInvalidViewStatePageShow(loginContent)) {
-                    ThreadPoolUtil.execute(new NewerStateHeaderTask(new IOpCallback() {
+                if (parser.isViewStateInvalid(loginContent)) {
+                    commonDataSource.refreshLoginViewState(new CommonDataSource.RefreshViewStateCallback() {
                         @Override
-                        public void onResp() {
-                            Log.d(tag,"reload viewstate header successfully.");
-                            // 获取成功 重新登录
-                            ThreadPoolUtil.execute(new UserLoginTask(user, callback));
+                        public void onRefreshData(String... stateParam) {
+                            //重试
+                            run();
                         }
 
                         @Override
-                        public void onError(String msg) {
+                        public void onRefreshError(String msg) {
                             callback.onGetLoginError(msg);
                         }
-                    }));
+                    });
                 } else if (parser.isCheckCodeInputMismatch(loginContent)){
-                    callback.onGetLoginError("验证码不正确");
+                    callback.onGetLoginError(ErrDef.ERR_LOGIN_CHECKCODE);
                 } else if (parser.isPswdInputMismatch(loginContent)){
-                    callback.onGetLoginError("学号或密码不正确");
+                    callback.onGetLoginError(ErrDef.ERR_LOGIN_IDORPSWD);
                 } else {
-                    callback.onGetLoginError("教务系统出现故障请稍候重试.");
+                    callback.onGetLoginError(ErrDef.ERR_LOGIN_ZFSOFT);
                 }
             }
 
@@ -210,9 +165,25 @@ public class RemoteLoginDataSource implements LoginDataSource{
     }
 
     @Override
-    public void login(User user, final GetLoginDataCallback callback) {
-        ThreadPoolUtil.execute(new UserLoginTask(user,callback));
+    public void login(User user, String checkCode, GetLoginDataCallback callback) {
+        ThreadPoolUtil.execute(new UserLoginTask(user, checkCode, callback));
     }
+
+    @Override
+    public void signIn(User user, GetLoginDataCallback callback) {
+
+    }
+
+    @Override
+    public void signUp(User user) {
+
+    }
+
+    @Override
+    public void updateLoginUser(User user) {
+
+    }
+
 
     @Override
     public void logout() {

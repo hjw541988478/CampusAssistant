@@ -1,5 +1,8 @@
 package cn.edu.university.zfcms.biz.courses;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.List;
 
 import cn.edu.university.zfcms.data.course.CourseDataRepo;
@@ -13,6 +16,7 @@ public class CoursesPresenter implements CoursesContract.Presenter {
 
     private final CoursesContract.View mTimetableView;
     private final CourseDataRepo mCourseDataRepo;
+    Handler uiHandler = new Handler(Looper.getMainLooper());
 
     private int currentWeekNo = 1;
 //    private SparseArray<List<RemoteRawCourse>> weekCoursesCache = new SparseArray<>();

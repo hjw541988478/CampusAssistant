@@ -1,8 +1,9 @@
 package cn.edu.university.zfcms.biz.electric;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,8 +11,7 @@ import android.widget.ImageView;
 
 import butterknife.Bind;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.base.BaseToolbarActivity;
-import cn.edu.university.zfcms.data.electric.ElectricRequestModel;
+import cn.edu.university.zfcms.base.ui.BaseToolbarActivity;
 import cn.edu.university.zfcms.model.ElectricCharge;
 
 /**
@@ -57,6 +57,12 @@ public class ElectricActivity extends BaseToolbarActivity implements ElectricCha
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.start();
+    }
+
+    @Override
     public void showInquiryError(String msg) {
         showToast(msg);
     }
@@ -74,5 +80,15 @@ public class ElectricActivity extends BaseToolbarActivity implements ElectricCha
     @Override
     public void setPresenter(ElectricChargeContract.Presenter presenter) {
 
+    }
+
+    @Override
+    public Context getLongLifeCycleContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
     }
 }

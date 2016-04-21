@@ -19,7 +19,7 @@ public interface ElectricChargeContract {
     }
 
     interface Presenter extends BasePresenter {
-        void loadElectricInquiryResult(String chcekCode);
+        void loadElectricInquiryResult(String checkCode);
         void loadCheckcode();
     }
 }

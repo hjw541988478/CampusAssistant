@@ -3,10 +3,11 @@ package cn.edu.university.zfcms.biz.courses;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.base.BaseToolbarActivity;
+import cn.edu.university.zfcms.base.ui.BaseToolbarActivity;
 import cn.edu.university.zfcms.data.course.CourseDataRepo;
 
 /**

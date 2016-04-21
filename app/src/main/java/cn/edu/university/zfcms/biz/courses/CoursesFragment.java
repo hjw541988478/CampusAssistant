@@ -1,5 +1,6 @@
 package cn.edu.university.zfcms.biz.courses;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.base.BaseFragment;
+import cn.edu.university.zfcms.base.ui.BaseFragment;
 import cn.edu.university.zfcms.model.Course;
 
 /**
@@ -81,5 +82,15 @@ public class CoursesFragment extends BaseFragment implements CoursesContract.Vie
     @Override
     public void setPresenter(CoursesContract.Presenter presenter) {
         this.coursesPresenter = presenter;
+    }
+
+    @Override
+    public Context getLongLifeCycleContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return getActivity();
     }
 }

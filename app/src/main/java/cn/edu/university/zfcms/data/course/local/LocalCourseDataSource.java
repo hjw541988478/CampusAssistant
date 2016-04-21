@@ -11,9 +11,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.university.zfcms.data.db.CampusAssitDbHelper;
 import cn.edu.university.zfcms.model.Course;
-import cn.edu.university.zfcms.model.BasicCourse;
 import cn.edu.university.zfcms.data.course.CourseDataSource;
+import cn.edu.university.zfcms.util.StringUtil;
 
 /**
  * DB 层保存课表信息
@@ -22,32 +23,26 @@ public class LocalCourseDataSource implements CourseDataSource {
 
     private static final String tag = LocalCourseDataSource.class.getSimpleName();
 
-    private static final String[] CourseProjection = {
-            CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_ID,
-            CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_NAME,
-            CoursePersistenceContract.CourseEntry.COLUMN_NAME_WHO_TEACH,
-            CoursePersistenceContract.CourseEntry.COLUMN_NAME_WHERE_TEACH
-    };
-
     private static final String[] CourseTimetableProjection = {
             CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID,
-            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_COURSE_ID,
-            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEK_NO,
+            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_NAME,
+            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHO_TEACH,
+            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHERE_TEACH,
+            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS,
             CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK,
             CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START,
-            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_DURATION
+            CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_END
     };
 
-    private static final String CourseLocalWeekTimetableSelection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEK_NO + " LIKE ?";
-    private static final String CourseLocalCourseSelection = CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_ID + " LIKE ?";
-    private static final String CourseLocalSingleTimetableSelection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + " LIKE ?";
+    private static final String WeekCoursesSelection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS + " LIKE ?";
+    private static final String SingleCourseSelection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + " LIKE ?";
 
     private static LocalCourseDataSource INSTANCE;
 
-    private CourseDbHelper mDbHelper;
+    private CampusAssitDbHelper mDbHelper;
 
     private LocalCourseDataSource(@NonNull Context context) {
-        mDbHelper = new CourseDbHelper(context);
+        mDbHelper = new CampusAssitDbHelper(context);
     }
 
     public static LocalCourseDataSource getInstance(@NonNull Context context) {
@@ -57,10 +52,48 @@ public class LocalCourseDataSource implements CourseDataSource {
         return INSTANCE;
     }
 
-    // 交由网络去查
+    // 查询所有的课程
     @Override
     public void loadRawCourses(LoadCoursesCallback callback) {
+        List<Course> courses = new ArrayList<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
+        // 查询某周课程表信息
+        Cursor timeTableCursor = db.query(
+                CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, CourseTimetableProjection
+                , null, null, null, null, null);
+
+        if (timeTableCursor != null && timeTableCursor.getCount() > 0) {
+            while (timeTableCursor.moveToNext()) {
+                int timeTableId = timeTableCursor
+                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
+
+                String weeksArrayStr = timeTableCursor
+                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS));
+                List<String> weeksList = StringUtil.stringToList(weeksArrayStr);
+
+                String dayOfWeek = timeTableCursor
+                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK));
+                int sectionStart = timeTableCursor
+                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START));
+                int sectionEnd = timeTableCursor
+                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_END));
+
+                String courseName = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_NAME));
+                String whoTeach = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHO_TEACH));
+                String whereTeach = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHERE_TEACH));
+                Course course = new Course(timeTableId, sectionStart, sectionEnd, weeksList, dayOfWeek, courseName, whoTeach, whereTeach);
+                courses.add(course);
+            }
+        }
+        if (timeTableCursor != null) {
+            timeTableCursor.close();
+        }
+        db.close();
+        Log.d(tag, "load all weeks courses :" + courses.size());
+        if (callback != null) {
+            callback.onCoursesLoaded(courses);
+        }
     }
 
     // 获取某周的课表信息
@@ -72,29 +105,28 @@ public class LocalCourseDataSource implements CourseDataSource {
         // 查询某周课程表信息
         Cursor timeTableCursor = db.query(
                 CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, CourseTimetableProjection
-                , CourseLocalWeekTimetableSelection,new String[]{String.valueOf(currentWeekNo)},null,null,null);
+                , WeekCoursesSelection, new String[]{String.valueOf(currentWeekNo)}, null, null, null);
 
         if (timeTableCursor != null && timeTableCursor.getCount() > 0) {
             while (timeTableCursor.moveToNext()) {
-                String timeTableId = timeTableCursor
-                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
-                String courseId = timeTableCursor
-                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_COURSE_ID));
-                int weekNo = timeTableCursor
-                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEK_NO));
+                int timeTableId = timeTableCursor
+                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
+
+                String weeksArrayStr = timeTableCursor
+                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS));
+                List<String> weeksList = StringUtil.stringToList(weeksArrayStr);
+
                 String dayOfWeek = timeTableCursor
                         .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK));
                 int sectionStart = timeTableCursor
                         .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START));
-                int sectionDuration = timeTableCursor
-                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_DURATION));
-                BasicCourse basicCourse = getBasicCourseByTimeIdInProc(db,courseId);
-                if ( basicCourse.isEmpty() ) {
-                    basicCourse.courseName = "";
-                    basicCourse.whoTeach = "";
-                    basicCourse.whereTeach = "";
-                }
-                Course course = new Course(timeTableId,basicCourse,weekNo,sectionStart,sectionDuration,dayOfWeek);
+                int sectionEnd = timeTableCursor
+                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_END));
+
+                String courseName = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_NAME));
+                String whoTeach = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHO_TEACH));
+                String whereTeach = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHERE_TEACH));
+                Course course = new Course(timeTableId, sectionStart, sectionEnd, weeksList, dayOfWeek, courseName, whoTeach, whereTeach);
                 courses.add(course);
             }
         }
@@ -118,30 +150,28 @@ public class LocalCourseDataSource implements CourseDataSource {
         // 查询某周课程表信息
         Cursor timeTableCursor = db.query(
                 CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, CourseTimetableProjection
-                , CourseLocalSingleTimetableSelection,new String[]{courseTimeId},null,null,null);
+                , SingleCourseSelection, new String[]{courseTimeId}, null, null, null);
 
         if (timeTableCursor != null && timeTableCursor.getCount() > 0) {
             timeTableCursor.moveToFirst();
-            String timeTableId = timeTableCursor
-                    .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
-            String courseId = timeTableCursor
-                    .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_COURSE_ID));
-            int weekNo = timeTableCursor
-                    .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEK_NO));
+            int timeTableId = timeTableCursor
+                    .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
+
+            String weeksArrayStr = timeTableCursor
+                    .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS));
+            List<String> weeksList = StringUtil.stringToList(weeksArrayStr);
+
             String dayOfWeek = timeTableCursor
                     .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK));
             int sectionStart = timeTableCursor
                     .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START));
-            int sectionDuration = timeTableCursor
-                    .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_DURATION));
+            int sectionEnd = timeTableCursor
+                    .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_END));
 
-            BasicCourse basicCourse = getBasicCourseByTimeIdInProc(db,courseId);
-            if ( basicCourse.isEmpty() ) {
-                basicCourse.courseName = "";
-                basicCourse.whoTeach = "";
-                basicCourse.whereTeach = "";
-            }
-            course = new Course(timeTableId,basicCourse,weekNo,sectionStart,sectionDuration,dayOfWeek);
+            String courseName = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_NAME));
+            String whoTeach = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHO_TEACH));
+            String whereTeach = timeTableCursor.getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHERE_TEACH));
+            course = new Course(timeTableId, sectionStart, sectionEnd, weeksList, dayOfWeek, courseName, whoTeach, whereTeach);
         }
 
         if (timeTableCursor != null) {
@@ -172,18 +202,15 @@ public class LocalCourseDataSource implements CourseDataSource {
 
             @Override
             public void onCommit() {
-                Log.d(tag,"save courses " + courses.toString() + "successful");
+                Log.d(tag, "save courses " + courses.size() + "commit successful");
             }
 
             @Override
             public void onRollback() {
-                Log.d(tag,"save courses " + courses.toString() + "rollback");
+                Log.d(tag, "save courses " + courses.size() + "rollback");
             }
         });
         for (Course course : courses) {
-            if (!isBasicCourseExistInProc(db,course.courseBasicInfo.courseId)) {
-                saveBasicCourseInProc(db,course.courseBasicInfo);
-            }
             db.insert(CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, null , convertTimetableCourseToCv(course));
         }
         db.setTransactionSuccessful();
@@ -193,92 +220,34 @@ public class LocalCourseDataSource implements CourseDataSource {
     // 转换
     private ContentValues convertTimetableCourseToCv(Course course) {
         ContentValues cv = new ContentValues();
-        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID, course.timeCourseId);
-        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_COURSE_ID, course.courseBasicInfo.courseId);
-        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK , course.courseDayOfWeek);
-        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_DURATION , course.courseSectionsDuration);
-        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START, course.courseWhichSectionStart);
-        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEK_NO , course.courseWeekNo);
-        return cv;
-    }
-
-    // 转换
-    private ContentValues convertBasicCourseToCv(BasicCourse course) {
-        ContentValues cv = new ContentValues();
-        cv.put(CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_ID,course.courseId);
-        cv.put(CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_NAME,course.courseName);
-        cv.put(CoursePersistenceContract.CourseEntry.COLUMN_NAME_WHO_TEACH , course.whoTeach);
-        cv.put(CoursePersistenceContract.CourseEntry.COLUMN_NAME_WHERE_TEACH , course.whereTeach);
-        return cv;
-    }
-
-    // 获取单条课表基本信息
-    private BasicCourse getBasicCourseByTimeIdInProc(SQLiteDatabase db , String courseId) {
-        BasicCourse basicCourse = new BasicCourse();
-        Cursor courseCursor = db.query(
-                CoursePersistenceContract.CourseEntry.TABLE_NAME, CourseProjection
-                , CourseLocalCourseSelection, new String[]{ courseId }, null, null, null);
-        if (courseCursor != null && courseCursor.getCount() > 0 ) {
-            courseCursor.moveToFirst();
-            basicCourse.courseName = courseCursor.getString(courseCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_NAME));
-            basicCourse.whoTeach = courseCursor.getString(courseCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseEntry.COLUMN_NAME_WHO_TEACH));
-            basicCourse.whereTeach = courseCursor.getString(courseCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseEntry.COLUMN_NAME_WHERE_TEACH));
+        if (course.timeId != 0) {
+            cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID, course.timeId);
         }
-        if (courseCursor != null) {
-            courseCursor.close();
-        }
-        return basicCourse;
-    }
-
-    // 课表基本信息是否存在
-    private boolean isBasicCourseExistInProc(SQLiteDatabase db, String courseId){
-        return !getBasicCourseByTimeIdInProc(db,courseId).isEmpty();
-    }
-
-    // 插入新的课表基本信息
-    private void saveBasicCourseInProc(SQLiteDatabase db, BasicCourse course) {
-        ContentValues values = convertBasicCourseToCv(course);
-        db.insert(CoursePersistenceContract.CourseEntry.TABLE_NAME,null,values);
-    }
-
-    // 更新课表基本信息
-    private void updateBasicCourseInProc(SQLiteDatabase db ,BasicCourse course) {
-        String courseSelection = CoursePersistenceContract.CourseEntry.COLUMN_NAME_COURSE_ID + " LIKE ?";
-        String[] courseSelectionArgs = { course.courseId };
-        db.update(CoursePersistenceContract.CourseEntry.TABLE_NAME,null,courseSelection,courseSelectionArgs);
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK, course.dayOfWeek);
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_END, course.whichSectionEnd);
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START, course.whichSectionStart);
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS, StringUtil.listToString(course.weeks));
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_NAME, course.courseName);
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHO_TEACH, course.whereTeach);
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHERE_TEACH, course.whereTeach);
+        return cv;
     }
 
     // 保存新的课表课程信息
     @Override
     public void saveTimetableCourse(Course course) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        updateOrInsertBasicCourseInProc(db,course.courseBasicInfo);
-
         db.insert(CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, null , convertTimetableCourseToCv(course));
         db.close();
-    }
-
-    // 存在更新不存在插入
-    private void updateOrInsertBasicCourseInProc(SQLiteDatabase db , BasicCourse course){
-        if (!isBasicCourseExistInProc(db,course.courseId)) {
-            saveBasicCourseInProc(db,course);
-        } else {
-            updateBasicCourseInProc(db,course);
-        }
     }
 
     // 更新某条课表信息
     @Override
     public void updateTimetableCourse(Course course) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        updateOrInsertBasicCourseInProc(db,course.courseBasicInfo);
-
         String selection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + " LIKE ?";
-        String[] selectionArgs = { course.timeCourseId };
+        String[] selectionArgs = {String.valueOf(course.timeId)};
         db.update(CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, convertTimetableCourseToCv(course), selection, selectionArgs);
-
         db.close();
     }
 
@@ -286,7 +255,6 @@ public class LocalCourseDataSource implements CourseDataSource {
     @Override
     public void deleteTimetableCourse(String timeId) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         String selection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + " LIKE ?";
         String[] selectionArgs = { timeId };
         db.delete(CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, selection, selectionArgs);
@@ -299,7 +267,6 @@ public class LocalCourseDataSource implements CourseDataSource {
     public void deleteAllCourses() {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         db.delete(CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME , null , null);
-        db.delete(CoursePersistenceContract.CourseEntry.TABLE_NAME , null , null);
         db.close();
     }
 
