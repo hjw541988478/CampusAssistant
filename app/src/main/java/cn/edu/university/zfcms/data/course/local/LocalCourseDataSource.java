@@ -65,8 +65,8 @@ public class LocalCourseDataSource implements CourseDataSource {
 
         if (timeTableCursor != null && timeTableCursor.getCount() > 0) {
             while (timeTableCursor.moveToNext()) {
-                int timeTableId = timeTableCursor
-                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
+                String timeTableId = timeTableCursor
+                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
 
                 String weeksArrayStr = timeTableCursor
                         .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS));
@@ -109,8 +109,8 @@ public class LocalCourseDataSource implements CourseDataSource {
 
         if (timeTableCursor != null && timeTableCursor.getCount() > 0) {
             while (timeTableCursor.moveToNext()) {
-                int timeTableId = timeTableCursor
-                        .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
+                String timeTableId = timeTableCursor
+                        .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
 
                 String weeksArrayStr = timeTableCursor
                         .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS));
@@ -154,8 +154,8 @@ public class LocalCourseDataSource implements CourseDataSource {
 
         if (timeTableCursor != null && timeTableCursor.getCount() > 0) {
             timeTableCursor.moveToFirst();
-            int timeTableId = timeTableCursor
-                    .getInt(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
+            String timeTableId = timeTableCursor
+                    .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID));
 
             String weeksArrayStr = timeTableCursor
                     .getString(timeTableCursor.getColumnIndexOrThrow(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WEEKS));
@@ -220,9 +220,7 @@ public class LocalCourseDataSource implements CourseDataSource {
     // 转换
     private ContentValues convertTimetableCourseToCv(Course course) {
         ContentValues cv = new ContentValues();
-        if (course.timeId != 0) {
-            cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID, course.timeId);
-        }
+        cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID, course.getObjectId());
         cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_DAY_OF_WEEK, course.dayOfWeek);
         cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_END, course.whichSectionEnd);
         cv.put(CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_SECTION_START, course.whichSectionStart);
@@ -246,7 +244,7 @@ public class LocalCourseDataSource implements CourseDataSource {
     public void updateTimetableCourse(Course course) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String selection = CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + " LIKE ?";
-        String[] selectionArgs = {String.valueOf(course.timeId)};
+        String[] selectionArgs = {course.getObjectId()};
         db.update(CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME, convertTimetableCourseToCv(course), selection, selectionArgs);
         db.close();
     }

@@ -42,7 +42,7 @@ public interface LoginContract {
     abstract class Parser extends BaseParser {
         public abstract boolean isLoginSuccessful(User loginUser, String loginUserHtml);
 
-        public abstract boolean isCheckCodeLoadSuccessful(byte[] checkcodeBytes);
+        public abstract boolean isCheckCodeLoadSuccessful(byte[] checkCodeBytes);
 
         public abstract boolean isCheckCodeInputMismatch(String htmlResp);
 

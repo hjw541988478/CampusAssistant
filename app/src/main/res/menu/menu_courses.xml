@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@drawable/ic_view_week_white_24dp"
+        android:title="周课表"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:title="切换周数"
+        android:icon="@drawable/ic_filter_variant"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:title="刷新课表信息"
+        app:icon="@drawable/ic_sync" />
+
+    <item android:title="回到今天" />
+
+    <item android:title="添加课程" />
+</menu>

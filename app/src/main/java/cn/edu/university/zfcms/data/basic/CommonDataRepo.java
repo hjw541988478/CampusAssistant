@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.http.common;
+package cn.edu.university.zfcms.data.basic;
 
 import android.util.Log;
 
@@ -7,8 +7,10 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import java.util.HashMap;
 
-import cn.edu.university.zfcms.base.func.BaseParser;
+import cn.bmob.v3.listener.SaveListener;
 import cn.edu.university.zfcms.http.HttpManager;
+import cn.edu.university.zfcms.model.Setting;
+import cn.edu.university.zfcms.parser.CommonParser;
 import cn.edu.university.zfcms.util.PreferenceUtil;
 
 /**
@@ -17,22 +19,23 @@ import cn.edu.university.zfcms.util.PreferenceUtil;
 public class CommonDataRepo implements CommonDataSource {
     private static final String tag = CommonDataRepo.class.getSimpleName();
 
-    private BaseParser parser;
+    private CommonParser parser;
 
-    public CommonDataRepo() {
-        parser = new BaseParser() {
-            @Override
-            public String parseViewStateParam(String viewstateHtml) {
-                return super.parseViewStateParam(viewstateHtml);
-            }
+    private static CommonDataRepo INSTANCE;
 
-            @Override
-            public boolean isViewStateInvalid(String response) {
-                return super.isViewStateInvalid(response);
-            }
-        };
+    private Setting mCurrentSetting;
+
+    private CommonDataRepo() {
+        parser = new CommonParser();
+        mCurrentSetting = PreferenceUtil.getSettingConfig();
     }
 
+    public static CommonDataRepo getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new CommonDataRepo();
+        }
+        return INSTANCE;
+    }
     /**
      * 获取新的Login __VIEWSTATE
      *
@@ -48,6 +51,11 @@ public class CommonDataRepo implements CommonDataSource {
         HttpUriRequest request = HttpManager.get(String.format(URL_INDEX_PAGE, userId), new HashMap<String, String>());
         HttpResponse response = HttpManager.performRequest(request);
         return HttpManager.parseStringResponse(response);
+    }
+
+    @Override
+    public Setting getCurrentSetting() {
+        return mCurrentSetting;
     }
 
     @Override
@@ -75,6 +83,18 @@ public class CommonDataRepo implements CommonDataSource {
             callback.onRefreshError("get main viewstate param error,please check manually");
             Log.e(tag, "get main viewstate param error,please check manually :\n" + rawHtml);
         }
+    }
+
+    @Override
+    public void refreshStudentYearsAndTerms() {
+        HttpUriRequest request = HttpManager.get(String.format(
+                URL_PERSONAL_COURSES_QUERY, PreferenceUtil.getLoginUser().userId,
+                PreferenceUtil.getLoginUser().userRealName), new HashMap<String, String>());
+        HttpResponse response = HttpManager.performRequest(request);
+        String rawHtml = HttpManager.parseStringResponse(response);
+        parser.parseCollegeYears(rawHtml, getCurrentSetting());
+        parser.parseCollegeTerms(rawHtml, getCurrentSetting());
+        PreferenceUtil.set(getCurrentSetting(), Setting.class);
     }
 
 }

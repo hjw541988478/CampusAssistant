@@ -2,10 +2,17 @@ package cn.edu.university.zfcms.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
-import cn.bmob.v3.BmobUser;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.edu.university.zfcms.base.func.Config;
-import cn.edu.university.zfcms.data.login.local.BassLoginDataSource;
+import cn.edu.university.zfcms.data.login.local.LocalLoginDataSource;
+import cn.edu.university.zfcms.model.Setting;
 import cn.edu.university.zfcms.model.User;
 
 /**
@@ -13,12 +20,9 @@ import cn.edu.university.zfcms.model.User;
  */
 public class PreferenceUtil {
 
-    private static final String KEY_LOGIN_VIEWSTATE = "LOGIN_VIEWSTATE";
-    private static final String KEY_LOGIN_USER_ID = "LOGIN_USER_ID";
-    private static final String KEY_LOGIN_USER_PSWD = "LOGIN_USER_PSWD";
-    private static final String KEY_LOGIN_USER_REAL_NAME = "LOGIN_USER_REAL_NAME";
+    private static String tag = PreferenceUtil.class.getSimpleName();
 
-//    private static final String STATE_HEADER_DEF_VAL = "dDwyODE2NTM0OTg7Oz6PUWaWJVz623LrXp10j4dGgzlnbw==";
+    private static final String KEY_LOGIN_VIEWSTATE = "LOGIN_VIEWSTATE";
 
     private static Context mContext;
 
@@ -26,43 +30,122 @@ public class PreferenceUtil {
         mContext = context;
     }
 
+    public static void set(String key, String val) {
+        SharedPreferences.Editor editor = mContext
+                .getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(key, val);
+        editor.apply();
+    }
+
+    public static String get(String key) {
+        String spText = mContext.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE)
+                .getString(key, "");
+        return spText;
+    }
+
+    public static void set(Object obj, Class claz) {
+        SharedPreferences.Editor editor = mContext
+                .getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(claz.getSimpleName(), GsonUtil.getGson().toJson(obj));
+        editor.apply();
+    }
+
+    public static <T> T get(Class<T> clazz) {
+        String spText = mContext.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE)
+                .getString(clazz.getSimpleName(), "");
+        T content = null;
+        if (!spText.isEmpty()) {
+            content = GsonUtil.getGson().fromJson(spText, clazz);
+        }
+        return content;
+    }
+
+    public static Setting getSettingConfig() {
+        Setting setting = get(Setting.class);
+        if (setting == null && getLoginUser() != null) {
+            BmobQuery<Setting> query = new BmobQuery<>();
+            query.addWhereEqualTo("userid", getLoginUser().getUsername());
+            query.findObjects(mContext, new FindListener<Setting>() {
+                @Override
+                public void onSuccess(List<Setting> list) {
+                    if (!list.isEmpty()) {
+                        updateSettingConfig(list.get(0));
+                    } else {
+                        Log.e(tag, "setting config by userid " +
+                                getLoginUser().getUsername() + " query results is empty");
+                    }
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    Log.e(tag, "setting config query results error " + s);
+                }
+            });
+        }
+        return setting;
+    }
+
+    public static void updateSettingConfig(final Setting setting) {
+        set(setting, Setting.class);
+        BmobQuery<Setting> query = new BmobQuery<>();
+        query.addWhereEqualTo("userid", setting.userId);
+        query.findObjects(mContext, new FindListener<Setting>() {
+            @Override
+            public void onSuccess(List<Setting> list) {
+                if (!list.isEmpty()) {
+                    setting.update(mContext, new UpdateListener() {
+
+                        @Override
+                        public void onSuccess() {
+                            Log.d(tag, "setting config update succesfully.");
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            Log.e(tag, "setting config update fail error " + s);
+                        }
+                    });
+                } else {
+                    setting.save(mContext, new SaveListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.e(tag, "setting config save successfully");
+                        }
+
+                        @Override
+                        public void onFailure(int i, String s) {
+                            Log.e(tag, "setting config save fail error " + s);
+                        }
+                    });
+                    Log.e(tag, "setting config by userid " +
+                            getLoginUser().getUsername() + " query results is empty");
+                }
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                Log.e(tag, "setting config query results error " + s);
+            }
+        });
+    }
+
     public static void updateLoginUser(User user) {
-//        SharedPreferences.Editor editor = mContext
-//                .getSharedPreferences(Config.SP_NAME,Context.MODE_PRIVATE).edit();
-//        editor.putString(KEY_LOGIN_USER_ID,user.userId);
-//        editor.putString(KEY_LOGIN_USER_REAL_NAME,user.userRealName);
-//        editor.putString(KEY_LOGIN_USER_PSWD,user.userPswd);
-//        editor.apply();
-        BassLoginDataSource.getInstance(mContext).updateLoginUser(user);
+        LocalLoginDataSource.getInstance(mContext).updateLoginUser(user);
     }
 
     public static User getLoginUser() {
-//        User user = new User();
-//        SharedPreferences sp = mContext.getSharedPreferences(Config.SP_NAME,Context.MODE_PRIVATE);
-//        user.userId = sp.getString(KEY_LOGIN_USER_ID,"");
-//        user.userRealName = sp.getString(KEY_LOGIN_USER_REAL_NAME,"");
-//        user.userPswd = sp.getString(KEY_LOGIN_USER_PSWD,"");
-        return BassLoginDataSource.getInstance(mContext).getLoginUser();
+        return LocalLoginDataSource.getInstance(mContext).getLoginUser();
     }
 
     public static void clearLoginUser() {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE).edit();
-        editor.remove(KEY_LOGIN_USER_REAL_NAME);
-        editor.remove(KEY_LOGIN_USER_PSWD);
-        editor.remove(KEY_LOGIN_USER_ID);
-        editor.apply();
+        LocalLoginDataSource.getInstance(mContext).logout();
     }
 
     public static void saveLoginViewStateParam(String newerHeaderVal) {
-        SharedPreferences.Editor editor = mContext
-                .getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(KEY_LOGIN_VIEWSTATE, newerHeaderVal);
-        editor.apply();
+        set(KEY_LOGIN_VIEWSTATE, newerHeaderVal);
     }
 
     public static String getLoginViewStateParam() {
-        String spText = mContext.getSharedPreferences(Config.SP_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_LOGIN_VIEWSTATE, "");
-        return spText;
+        return get(KEY_LOGIN_VIEWSTATE);
     }
 }

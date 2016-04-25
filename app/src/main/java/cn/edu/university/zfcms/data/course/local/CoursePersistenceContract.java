@@ -14,5 +14,7 @@ public final class CoursePersistenceContract {
         public static final String COLUMN_NAME_WEEKS = "whichweeks";
         public static final String COLUMN_NAME_SECTION_START = "whichsectionstart";
         public static final String COLUMN_NAME_SECTION_END = "whichsectionend";
+        public static final String COLUMN_NAME_YEAR = "year";
+        public static final String COLUMN_NAME_TERM = "term";
     }
 }

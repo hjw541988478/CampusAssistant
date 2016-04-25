@@ -2,7 +2,7 @@ package cn.edu.university.zfcms.data.login;
 
 import android.content.Context;
 
-import cn.edu.university.zfcms.data.login.local.BassLoginDataSource;
+import cn.edu.university.zfcms.data.login.local.LocalLoginDataSource;
 import cn.edu.university.zfcms.data.login.remote.RemoteLoginDataSource;
 import cn.edu.university.zfcms.model.User;
 
@@ -21,7 +21,7 @@ public class LoginDataRepo implements LoginDataSource {
     private LoginDataRepo(Context context) {
 //        this.localLoginSource = new LocalLoginDataSource();
         this.remoteLoginSource = new RemoteLoginDataSource();
-        this.bmobLoginSource = BassLoginDataSource.getInstance(context);
+        this.bmobLoginSource = LocalLoginDataSource.getInstance(context);
     }
 
     public static LoginDataRepo getInstance(Context context) {

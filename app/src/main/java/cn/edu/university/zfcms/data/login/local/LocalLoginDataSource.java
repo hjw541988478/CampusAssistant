@@ -12,20 +12,20 @@ import cn.edu.university.zfcms.model.User;
 /**
  * Created by hjw on 16/4/20.
  */
-public class BassLoginDataSource implements LoginDataSource {
-    private static final String tag = BassLoginDataSource.class.getSimpleName();
+public class LocalLoginDataSource implements LoginDataSource {
+    private static final String tag = LocalLoginDataSource.class.getSimpleName();
 
     private Context context;
 
-    private BassLoginDataSource(Context context) {
+    private LocalLoginDataSource(Context context) {
         this.context = context;
     }
 
-    private static BassLoginDataSource loginDataSource;
+    private static LocalLoginDataSource loginDataSource;
 
-    public static BassLoginDataSource getInstance(Context context) {
+    public static LocalLoginDataSource getInstance(Context context) {
         if (loginDataSource == null) {
-            loginDataSource = new BassLoginDataSource(context);
+            loginDataSource = new LocalLoginDataSource(context);
         }
         return loginDataSource;
     }
@@ -94,6 +94,6 @@ public class BassLoginDataSource implements LoginDataSource {
 
     @Override
     public void logout() {
-
+        BmobUser.logOut(context);
     }
 }

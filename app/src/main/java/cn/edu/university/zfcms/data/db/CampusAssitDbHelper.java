@@ -20,7 +20,7 @@ public class CampusAssitDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_COURSE_TIMETABLE =
             "CREATE TABLE " + CoursePersistenceContract.CourseTimetableEntry.TABLE_NAME + " (" +
-                    CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT," +
+                    CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_TIME_ID + TEXT_TYPE + " PRIMARY KEY ," +
                     CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
                     CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHERE_TEACH + TEXT_TYPE + COMMA_SEP +
                     CoursePersistenceContract.CourseTimetableEntry.COLUMN_NAME_WHO_TEACH + TEXT_TYPE + COMMA_SEP +

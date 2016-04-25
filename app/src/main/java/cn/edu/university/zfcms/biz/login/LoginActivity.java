@@ -170,7 +170,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginContract.
     public void showLoginSuccessfulView(User user) {
         showToast("登录成功,欢迎:" + user.toString());
         showLogingIndicatorView(false);
-        CoursesActivity.launch(this);
+        CoursesActivity.launch(this, CoursesActivity.TYPE_DAY_COURESE);
     }
 
     @Override

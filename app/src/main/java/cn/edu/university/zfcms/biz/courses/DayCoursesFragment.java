@@ -2,46 +2,43 @@ package cn.edu.university.zfcms.biz.courses;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import cn.edu.university.zfcms.R;
 import cn.edu.university.zfcms.base.ui.BaseFragment;
+import cn.edu.university.zfcms.biz.courses.adapter.DayCoursesAdapter;
 import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.
  */
-public class CoursesFragment extends BaseFragment implements CoursesContract.View {
+public class DayCoursesFragment extends BaseFragment implements CoursesContract.View {
 
-    private static final String tag = CoursesFragment.class.getSimpleName();
+    private static final String tag = DayCoursesFragment.class.getSimpleName();
 
     private CoursesContract.Presenter coursesPresenter;
+    private DayCoursesAdapter adapter;
 
-    @Bind(R.id.course_no_data)
-    View courseNoData;
-    @Bind(R.id.course_content_scroll_body)
-    View courseContentContainer;
-    @Bind(R.id.course_content_container)
-    ViewGroup courseContent;
+    @Bind(R.id.day_courses_pager)
+    ViewPager pager;
 
-    public static CoursesFragment newInstance(){
-        return new CoursesFragment();
+    public static DayCoursesFragment newInstance() {
+        return new DayCoursesFragment();
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_courses;
+        return R.layout.fragment_day_courses;
     }
 
     @Override
     protected void initViews(View self, Bundle savedInstanceState) {
-        ButterKnife.bind(this,self);
+        super.initViews(self, savedInstanceState);
     }
 
     @Override
@@ -50,23 +47,24 @@ public class CoursesFragment extends BaseFragment implements CoursesContract.Vie
     }
 
     @Override
-    protected void initData() {
-        coursesPresenter.start();
+    protected void initNoLazyData() {
+        adapter = new DayCoursesAdapter(getLongLifeCycleContext(), getFragmentManager());
+        pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(adapter.getCount());
+        if (((CoursesActivity) getActivity()).getTabs() != null) {
+            ((CoursesActivity) getActivity()).getTabs().setupWithViewPager(pager);
+        }
     }
 
 
     @Override
     public void showNoCourses() {
-        courseNoData.setVisibility(View.VISIBLE);
-        courseContentContainer.setVisibility(View.GONE);
     }
 
     @Override
     public void showCourses(List<Course> remoteRawCourses) {
-        courseNoData.setVisibility(View.GONE);
-        courseContentContainer.setVisibility(View.VISIBLE);
 
-        Log.d(tag,"show courses current week " + coursesPresenter.getCurrentWeekNo() + ":\n" + remoteRawCourses.toString());
+//        Log.d(tag,"show courses current week " + coursesPresenter.getCurrentWeekNo() + ":\n" + remoteRawCourses.toString());
     }
 
     @Override

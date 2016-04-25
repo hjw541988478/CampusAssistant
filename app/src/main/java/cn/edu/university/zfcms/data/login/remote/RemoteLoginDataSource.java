@@ -15,8 +15,8 @@ import java.util.Map;
 import cn.edu.university.zfcms.base.func.ErrDef;
 import cn.edu.university.zfcms.biz.login.LoginContract;
 import cn.edu.university.zfcms.http.HttpManager;
-import cn.edu.university.zfcms.http.common.CommonDataRepo;
-import cn.edu.university.zfcms.http.common.CommonDataSource;
+import cn.edu.university.zfcms.data.basic.CommonDataRepo;
+import cn.edu.university.zfcms.data.basic.CommonDataSource;
 import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
 import cn.edu.university.zfcms.parser.LoginParser;
@@ -33,7 +33,7 @@ public class RemoteLoginDataSource implements LoginDataSource{
 
     public RemoteLoginDataSource() {
         parser = new LoginParser();
-        commonDataSource = new CommonDataRepo();
+        commonDataSource = CommonDataRepo.getInstance();
     }
 
     /**

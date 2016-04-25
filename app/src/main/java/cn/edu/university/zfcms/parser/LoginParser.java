@@ -34,8 +34,8 @@ public class LoginParser extends LoginContract.Parser {
     }
 
     @Override
-    public boolean isCheckCodeLoadSuccessful(byte[] checkcodeBytes){
-        return checkcodeBytes != null;
+    public boolean isCheckCodeLoadSuccessful(byte[] checkCodeBytes) {
+        return checkCodeBytes != null;
     }
 
     @Override

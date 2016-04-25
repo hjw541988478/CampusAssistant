@@ -19,6 +19,10 @@ public interface CoursesContract {
         void showWeekFilterMenu();
     }
 
+    interface DayView extends View {
+        void showCourse(Course course);
+    }
+
     interface Presenter extends BasePresenter {
         int getCurrentWeekNo();
         void setCurrentWeekNo(int weekNo);

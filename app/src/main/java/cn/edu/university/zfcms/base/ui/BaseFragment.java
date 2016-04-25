@@ -8,9 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseFragment extends Fragment {
 
     protected View self;
+
+    private boolean isVisible;
+
+    private boolean isPrepared;
+
+    private boolean isFirstLoad = true;
 
     @Nullable
     @Override
@@ -25,18 +33,70 @@ public abstract class BaseFragment extends Fragment {
         }
 
         this.initViews(this.self, savedInstanceState);
-        this.initData();
+        this.initNoLazyData();
         this.initListeners();
         return this.self;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint()) {
+            isVisible = true;
+            onVisible();
+        } else {
+            isVisible = false;
+            onInvisible();
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            isVisible = true;
+            onVisible();
+        } else {
+            isVisible = false;
+            onInvisible();
+        }
+    }
+
+    protected void onVisible() {
+        lazyLoad();
+    }
+
+    protected void onInvisible() {
+    }
+
     protected abstract int getLayoutId();
 
-    protected abstract void initViews(View self, Bundle savedInstanceState);
+    protected void initViews(View self, Bundle savedInstanceState) {
+        ButterKnife.bind(this,self);
+        isPrepared = true;
+        lazyLoad();
+    }
+
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || !isFirstLoad) {
+            return;
+        }
+        isFirstLoad = false;
+        initLazyData();
+    }
+
+    /**
+     * 延迟加载时使用该方法
+     */
+    protected void initLazyData(){
+
+    }
 
     protected abstract void initListeners();
 
-    protected abstract void initData();
+    protected void initNoLazyData(){
+
+    }
 
     protected <V extends View> V findView(int id) {
         return (V) this.self.findViewById(id);
