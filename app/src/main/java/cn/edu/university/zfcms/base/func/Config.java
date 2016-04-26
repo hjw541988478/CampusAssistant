@@ -1,5 +1,7 @@
 package cn.edu.university.zfcms.base.func;
 
+import cn.edu.university.zfcms.R;
+
 /**
  * Created by hjw on 16/4/18.
  */
@@ -9,4 +11,15 @@ public class Config {
     public static final String SP_NAME = "ZfsoftCampusAssitPreference";
 
     public static final String BASE_HOST = "http://210.34.213.88";
+
+
+    public static int[] menuIds = new int[]{
+            R.id.navigation_courses,
+            R.id.navigation_exams,
+            R.id.navigation_results,
+            R.id.navigation_tool,
+            R.id.navigation_feedback,
+            R.id.navigation_setting,
+            R.id.navigation_about
+    };
 }

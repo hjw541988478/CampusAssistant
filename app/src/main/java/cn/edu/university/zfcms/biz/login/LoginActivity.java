@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import butterknife.Bind;
 import cn.edu.university.zfcms.R;
@@ -170,7 +168,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginContract.
     public void showLoginSuccessfulView(User user) {
         showToast("登录成功,欢迎:" + user.toString());
         showLogingIndicatorView(false);
-        CoursesActivity.launch(this, CoursesActivity.TYPE_DAY_COURESE);
+        CoursesActivity.launch(this, CoursesActivity.TYPE_DAY_COURSES);
     }
 
     @Override

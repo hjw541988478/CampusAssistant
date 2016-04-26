@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.ListPopupWindow;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.List;
@@ -47,13 +50,21 @@ public class DayCoursesFragment extends BaseFragment implements CoursesContract.
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_course_week_change:
+                showWeekFilterMenu();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void initNoLazyData() {
         adapter = new DayCoursesAdapter(getLongLifeCycleContext(), getFragmentManager());
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount());
-        if (((CoursesActivity) getActivity()).getTabs() != null) {
-            ((CoursesActivity) getActivity()).getTabs().setupWithViewPager(pager);
-        }
+        ((CoursesActivity) getActivity()).getTabs().setupWithViewPager(pager);
     }
 
 
@@ -74,7 +85,28 @@ public class DayCoursesFragment extends BaseFragment implements CoursesContract.
 
     @Override
     public void showWeekFilterMenu() {
-
+        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_course_week_change));
+        popup.getMenu().add("第1周");
+        popup.getMenu().add("第2周");
+        popup.getMenu().add("第3周");
+        popup.getMenu().add("第4周");
+        popup.getMenu().add("第5周");
+        popup.getMenu().add("第6周");
+        popup.getMenu().add("第7周");
+        popup.getMenu().add("第8周");
+        popup.getMenu().add("第9周");
+        popup.getMenu().add("第10周");
+        popup.getMenu().add("第11周");
+        popup.getMenu().add("第12周");
+        popup.getMenu().add("第13周");
+        popup.getMenu().add("第14周");
+        popup.getMenu().add("第15周");
+        popup.setOnMenuItemClickListener(item -> {
+            showToast(item.getTitle().toString());
+            coursesPresenter.setCurrentWeekNo(1);
+            return true;
+        });
+        popup.show();
     }
 
     @Override

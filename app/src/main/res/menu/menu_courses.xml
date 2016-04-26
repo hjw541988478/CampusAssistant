@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:icon="@drawable/ic_view_week_white_24dp"
-        android:title="周课表"
-        app:showAsAction="collapseActionView" />
 
     <item
-        android:title="切换周数"
-        android:icon="@drawable/ic_filter_variant"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/menu_course_week_change"
+        android:title="@string/menu_course_week_change"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        app:showAsAction="always" />
 
     <item
-        android:title="刷新课表信息"
-        app:icon="@drawable/ic_sync" />
+        android:id="@+id/menu_course_share"
+        android:title="@string/menu_course_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        app:showAsAction="always" />
 
-    <item android:title="回到今天" />
+    <item
+        android:id="@+id/menu_course_week"
+        android:title="@string/menu_course_week_view"
+        app:showAsAction="never" />
 
-    <item android:title="添加课程" />
+    <item
+        android:id="@+id/menu_course_add"
+        android:title="@string/menu_course_add"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_course_sync"
+        android:title="@string/menu_course_sync"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_back_today"
+        android:title="@string/menu_back_today"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/navigation_feedback"
+        android:title="@string/navigation_feedback"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/navigation_about"
+        android:title="@string/navigation_about"
+        app:showAsAction="never" />
 </menu>

@@ -1,7 +1,26 @@
 <resources>
     <string name="app_name">ZfsoftAssit</string>
+    <string name="app_menu">ZfsoftMenu</string>
+    <string name="menu_course_share">分享到</string>
+    <string name="menu_course_sync">同步课表信息</string>
+    <string name="menu_course_week_change">切换当前周数</string>
+    <string name="menu_course_week_view">切换到周课表</string>
+    <string name="menu_back_today">回到本周课表</string>
+    <string name="menu_course_add">添加课程</string>
+    <string name="navigation_courses">课表</string>
+    <string name="navigation_results">成绩</string>
+    <string name="navigation_exams">考试</string>
+    <string name="navigation_tool">工具</string>
+    <string name="navigation_feedback">反馈</string>
+    <string name="navigation_setting">设置</string>
+    <string name="navigation_about">关于</string>
 
-    <!-- Strings related to login -->
+    <string name="navigation_tool_room">空教室</string>
+    <string name="navigation_tool_electric">查电费</string>
+    <string name="navigation_tool_news">看新闻</string>
+    <string name="navigation_tool_calendar">查校历</string>
+    <string name="navigation_tool_books">查图书</string>
+
     <string name="prompt_sno">学号</string>
     <string name="prompt_password">密码</string>
     <string name="prompt_checkcode">验证码</string>

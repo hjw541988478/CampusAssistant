@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/navigation_courses"
+            android:checked="true"
+            android:icon="@drawable/ic_nav_course"
+            android:title="@string/navigation_courses" />
+        <item
+            android:id="@+id/navigation_exams"
+            android:icon="@drawable/ic_nav_exam"
+            android:title="@string/navigation_exams" />
+        <item
+            android:id="@+id/navigation_results"
+            android:icon="@drawable/ic_nav_results"
+            android:title="@string/navigation_results" />
+        <item
+            android:id="@+id/navigation_tool"
+            android:icon="@drawable/ic_nav_tool"
+            android:title="@string/navigation_tool" />
+    </group>
+    <item android:title="其他">
+        <menu>
+            <item
+                android:id="@+id/navigation_feedback"
+                android:icon="@drawable/ic_nav_feedback"
+                android:title="@string/navigation_feedback" />
+            <item
+                android:id="@+id/navigation_setting"
+                android:icon="@drawable/ic_nav_setting"
+                android:title="@string/navigation_setting" />
+            <item
+                android:id="@+id/navigation_about"
+                android:icon="@drawable/ic_nav_about"
+                android:title="@string/navigation_about" />
+        </menu>
+    </item>
+</menu>

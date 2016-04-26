@@ -3,36 +3,46 @@ package cn.edu.university.zfcms.biz.courses;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
+import android.view.MenuItem;
 
 
 import butterknife.Bind;
 import cn.edu.university.zfcms.R;
+import cn.edu.university.zfcms.base.func.Config;
+import cn.edu.university.zfcms.base.ui.BaseDrawerLayoutActivity;
 import cn.edu.university.zfcms.base.ui.BaseToolbarActivity;
-import cn.edu.university.zfcms.biz.courses.adapter.DayCoursesAdapter;
 import cn.edu.university.zfcms.data.course.CourseDataRepo;
 
 /**
  * Created by hjw on 16/4/16.
  */
-public class CoursesActivity extends BaseToolbarActivity{
+public class CoursesActivity extends BaseDrawerLayoutActivity {
 
     private CoursesPresenter coursesPresenter;
 
-    public static final int TYPE_DAY_COURESE = 1;
+
+    public static final int TYPE_DAY_COURSES = 1;
     public static final int TYPE_WEEK_COURSES = 2;
 
     public static final String COURSES_TYPE = "courses_type";
 
-    @Bind(R.id.tab_layout)
-    TabLayout tabs;
+    private int currentType;
 
     public static void launch(Context context, int type) {
         Intent intent = new Intent(context, CoursesActivity.class);
         intent.putExtra(COURSES_TYPE, type);
         context.startActivity(intent);
+    }
+
+    @Bind(R.id.tab_layout)
+    TabLayout tabs;
+
+    protected TabLayout getTabs() {
+        return tabs;
     }
 
     @Override
@@ -44,8 +54,8 @@ public class CoursesActivity extends BaseToolbarActivity{
     protected void initViews(Bundle savedInstanceState) {
         Fragment coursesFragment = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (coursesFragment == null) {
-            int currentType = getIntent().getIntExtra(COURSES_TYPE, TYPE_DAY_COURESE);
-            if (currentType == TYPE_DAY_COURESE) {
+            currentType = getIntent().getIntExtra(COURSES_TYPE, TYPE_DAY_COURSES);
+            if (currentType == TYPE_DAY_COURSES) {
                 coursesFragment = DayCoursesFragment.newInstance();
             } else if (currentType == TYPE_WEEK_COURSES) {
                 coursesFragment = WeekCoursesFragment.newInstance();
@@ -56,8 +66,10 @@ public class CoursesActivity extends BaseToolbarActivity{
                 CourseDataRepo.getInstance(getApplicationContext()), (CoursesContract.View) coursesFragment);
     }
 
-    protected TabLayout getTabs() {
-        return tabs;
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
     }
 
     @Override
@@ -67,12 +79,36 @@ public class CoursesActivity extends BaseToolbarActivity{
 
     @Override
     protected void initData() {
+        if (currentType == TYPE_WEEK_COURSES) {
 
+        } else {
+
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_courses, menu);
         return true;
+    }
+
+    @Override
+    protected NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener() {
+        return item -> CoursesActivity.this.menuItemChecked(item.getItemId());
+    }
+
+    @Override
+    protected int[] getMenuItemIds() {
+        return Config.menuIds;
+    }
+
+    @Override
+    protected void onMenuItemOnClick(MenuItem now) {
+
+    }
+
+    @Override
+    public void onSwipeRefresh() {
+
     }
 }

@@ -15,7 +15,6 @@ public interface CoursesContract {
         void showNoCourses();
         void showCourses(List<Course> remoteRawCourses);
         void showCoursesLoadError();
-
         void showWeekFilterMenu();
     }
 
