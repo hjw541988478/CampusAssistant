@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group>
+    <group android:id="@+id/menu_group_nav_funcs">
         <item
             android:id="@+id/navigation_courses"
             android:checked="true"
@@ -19,20 +19,19 @@
             android:icon="@drawable/ic_nav_tool"
             android:title="@string/navigation_tool" />
     </group>
-    <item android:title="其他">
-        <menu>
-            <item
-                android:id="@+id/navigation_feedback"
-                android:icon="@drawable/ic_nav_feedback"
-                android:title="@string/navigation_feedback" />
-            <item
-                android:id="@+id/navigation_setting"
-                android:icon="@drawable/ic_nav_setting"
-                android:title="@string/navigation_setting" />
-            <item
-                android:id="@+id/navigation_about"
-                android:icon="@drawable/ic_nav_about"
-                android:title="@string/navigation_about" />
-        </menu>
-    </item>
+
+    <group android:id="@+id/menu_group_nav_other">
+        <item
+            android:id="@+id/navigation_feedback"
+            android:icon="@drawable/ic_nav_feedback"
+            android:title="@string/navigation_feedback" />
+        <item
+            android:id="@+id/navigation_setting"
+            android:icon="@drawable/ic_nav_setting"
+            android:title="@string/navigation_setting" />
+        <item
+            android:id="@+id/navigation_about"
+            android:icon="@drawable/ic_nav_about"
+            android:title="@string/navigation_about" />
+    </group>
 </menu>

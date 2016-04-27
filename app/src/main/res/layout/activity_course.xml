@@ -8,28 +8,31 @@
     android:orientation="vertical">
 
     <android.support.design.widget.CoordinatorLayout
+        style="@style/Widget.Design.CoordinatorLayout"
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <android.support.design.widget.AppBarLayout
+            style="@style/Widget.Design.AppBarLayout"
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.v7.widget.Toolbar
+                style="@style/Widget.AppCompat.Toolbar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <android.support.design.widget.TabLayout
+                style="@style/Widget.Design.TabLayout"
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -43,6 +46,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.FloatingActionButton
+            style="@style/Widget.Design.FloatingActionButton"
             android:id="@+id/id_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,11 +57,11 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
+        style="@style/Widget.Design.NavigationView"
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_header"
         app:menu="@menu/menu_navigation" />
 </android.support.v4.widget.DrawerLayout>

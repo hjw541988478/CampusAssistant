@@ -16,15 +16,15 @@
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
         android:textColor="@color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_marginTop="8dp"
         android:text="王二小" />
 
     <android.support.v7.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:layout_marginTop="8dp"
         android:textColor="@color/white"
         android:text="计通学院/软件工程/1101班" />
