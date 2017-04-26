@@ -6,8 +6,7 @@ import android.util.Log;
 import com.squareup.leakcanary.LeakCanary;
 
 import cn.bmob.v3.Bmob;
-import cn.edu.university.zfcms.base.func.Config;
-import cn.edu.university.zfcms.http.HttpManager;
+import cn.edu.university.zfcms.base.mvp.Config;
 import cn.edu.university.zfcms.util.PreferenceUtil;
 
 /**
