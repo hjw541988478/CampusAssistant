@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.base.ui.BaseFragment;
-import cn.edu.university.zfcms.model.Course;
+import cn.edu.university.zfcms.base.BaseFragment;
+import cn.edu.university.zfcms.storage.entity.Course;
 
 /**
  * Created by hjw on 16/4/15.
@@ -23,11 +23,11 @@ public class WeekCoursesFragment extends BaseFragment implements CoursesContract
 
     private CoursesContract.Presenter coursesPresenter;
 
-    @Bind(R.id.course_no_data)
+    @BindView(R.id.course_no_data)
     View courseNoData;
-    @Bind(R.id.course_content_scroll_body)
+    @BindView(R.id.course_content_scroll_body)
     View courseContentContainer;
-    @Bind(R.id.course_content_container)
+    @BindView(R.id.course_content_container)
     ViewGroup courseContent;
 
     public static WeekCoursesFragment newInstance() {
@@ -85,12 +85,7 @@ public class WeekCoursesFragment extends BaseFragment implements CoursesContract
     }
 
     @Override
-    public Context getLongLifeCycleContext() {
-        return getActivity().getApplicationContext();
-    }
-
-    @Override
-    public Context getActivityContext() {
+    public Context getRxLifeActivity() {
         return getActivity();
     }
 }

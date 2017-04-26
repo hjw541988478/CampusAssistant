@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.base.mvp;
+package cn.edu.university.zfcms.app.mvp;
 
 /**
  * Created by garvin on 013 2017/2/13.
@@ -6,8 +6,4 @@ package cn.edu.university.zfcms.base.mvp;
 
 public interface BasePresenter {
     void start();
-
-    void subscribe();
-
-    void unsubscribe();
 }

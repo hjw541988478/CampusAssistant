@@ -1,16 +1,16 @@
-package cn.edu.university.zfcms.base.ui;
+package cn.edu.university.zfcms.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import cn.edu.university.zfcms.R;
 import cn.edu.university.zfcms.widget.MultiSwipeRefreshLayout;
 
 public abstract class BaseSwipeRefreshLayout extends BaseToolbarActivity {
 
     @Nullable
-    @Bind(R.id.multi_swipe_refresh_layout)
+    @BindView(R.id.multi_swipe_refresh_layout)
     protected MultiSwipeRefreshLayout mMultiSwipeRefreshLayout;
 
     private boolean refreshStatus = false;

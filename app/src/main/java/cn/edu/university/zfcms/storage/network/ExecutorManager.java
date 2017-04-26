@@ -1,4 +1,4 @@
-package cn.huangjiawen.dev_template.storage.network;
+package cn.edu.university.zfcms.storage.network;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -59,19 +59,16 @@ public class ExecutorManager {
         return count;
     }
 
-    private static final FileFilter CPU_FILTER = new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-            String path = pathname.getName();
-            if (path.startsWith("cpu")) {
-                for (int i = 3; i < path.length(); i++) {
-                    if (path.charAt(i) < '0' || path.charAt(i) > '9') {
-                        return false;
-                    }
+    private static final FileFilter CPU_FILTER = pathname -> {
+        String path = pathname.getName();
+        if (path.startsWith("cpu")) {
+            for (int i = 3; i < path.length(); i++) {
+                if (path.charAt(i) < '0' || path.charAt(i) > '9') {
+                    return false;
                 }
-                return true;
             }
-            return false;
+            return true;
         }
+        return false;
     };
 }

@@ -2,8 +2,9 @@ package cn.edu.university.zfcms.biz.login;
 
 import android.graphics.Bitmap;
 
-import cn.edu.university.zfcms.base.func.ErrDef;
-import cn.edu.university.zfcms.model.User;
+import cn.edu.university.zfcms.app.ErrDef;
+import cn.edu.university.zfcms.app.ZfsoftCampusAsstApp;
+import cn.edu.university.zfcms.storage.entity.User;
 import cn.edu.university.zfcms.data.login.LoginDataRepo;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
 
@@ -16,7 +17,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     private LoginContract.View loginView;
 
     public LoginPresenter(LoginContract.View loginView) {
-        this.loginDataRepo = LoginDataRepo.getInstance(loginView.getLongLifeCycleContext());
+        this.loginDataRepo = LoginDataRepo.getInstance(ZfsoftCampusAsstApp.getInstance());
         this.loginView = loginView;
         this.loginView.setPresenter(this);
     }

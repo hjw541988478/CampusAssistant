@@ -1,11 +1,9 @@
-package cn.edu.university.zfcms.model;
-
-import cn.bmob.v3.BmobObject;
+package cn.edu.university.zfcms.storage.entity;
 
 /**
  * Created by hjw on 2016/04/18 0018.
  */
-public class ElectricCharge extends BmobObject {
+public class ElectricCharge {
     public String balance;
     public String residualDegrees;
 }

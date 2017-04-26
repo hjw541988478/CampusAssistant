@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.base.mvp;
+package cn.edu.university.zfcms.app.mvp;
 
 public interface BaseDataSource {
 

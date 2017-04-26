@@ -4,8 +4,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
-import cn.edu.university.zfcms.base.func.BaseParser;
-import cn.edu.university.zfcms.model.Setting;
+import cn.edu.university.zfcms.app.mvp.BaseParser;
+import cn.edu.university.zfcms.storage.entity.Setting;
 
 /**
  * Created by hjw on 16/4/22.

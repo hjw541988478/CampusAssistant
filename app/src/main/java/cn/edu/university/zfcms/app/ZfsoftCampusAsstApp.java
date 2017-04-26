@@ -1,12 +1,11 @@
-package cn.edu.university.zfcms.base;
+package cn.edu.university.zfcms.app;
 
 import android.app.Application;
 import android.util.Log;
 
+import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 
-import cn.bmob.v3.Bmob;
-import cn.edu.university.zfcms.base.mvp.Config;
 import cn.edu.university.zfcms.util.PreferenceUtil;
 
 /**
@@ -14,16 +13,22 @@ import cn.edu.university.zfcms.util.PreferenceUtil;
  */
 public class ZfsoftCampusAsstApp extends Application{
 
-    private static final String tag = ZfsoftCampusAsstApp.class.getSimpleName();
+    private static final String TAG = ZfsoftCampusAsstApp.class.getSimpleName();
+
+    private static ZfsoftCampusAsstApp appContext;
+
+    public static ZfsoftCampusAsstApp getInstance() {
+        return appContext;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(tag,"CampusAsstApp is initializing...");
+        Log.d(TAG, "onCreate() called");
+        appContext = this;
         PreferenceUtil.init(getApplicationContext());
-
+        Stetho.initializeWithDefaults(this);
         LeakCanary.install(this);
-        Bmob.initialize(this, Config.BMOB_APP_ID);
     }
 
 
