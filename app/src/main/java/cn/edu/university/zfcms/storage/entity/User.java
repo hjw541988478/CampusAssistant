@@ -1,16 +1,13 @@
-package cn.edu.university.zfcms.model;
-
-import android.content.Context;
+package cn.edu.university.zfcms.storage.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobUser;
-
 /**
  * Created by hjw on 16/4/15.
  */
-public class User extends BmobUser{
+public class User {
+
     public String userId;
     public String userPswd;
     public String userRealName;
@@ -53,9 +50,6 @@ public class User extends BmobUser{
         this.userTerms = user.userTerms;
     }
 
-    public boolean isEmpty(Context context) {
-        return getCurrentUser(context) == null;
-    }
 
 
     @Override
@@ -64,7 +58,7 @@ public class User extends BmobUser{
             return true;
         if ( o instanceof User) {
             User anotherUser = (User) o;
-            return anotherUser.getUsername().equals(this.getUsername())
+            return anotherUser.userId.equals(this.userId)
                     && anotherUser.userRealName.equals(this.userRealName)
                     && anotherUser.userCollege.equals(this.userCollege)
                     && anotherUser.userMajor.equals(this.userMajor)

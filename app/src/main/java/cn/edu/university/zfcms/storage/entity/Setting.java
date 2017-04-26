@@ -1,15 +1,14 @@
-package cn.edu.university.zfcms.model;
+package cn.edu.university.zfcms.storage.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.BmobObject;
 import cn.edu.university.zfcms.util.PreferenceUtil;
 
 /**
  * Created by hjw on 16/4/19.
  */
-public class Setting extends BmobObject {
+public class Setting {
     public String userId;
     public String currentTerm;
     public String currentYear;

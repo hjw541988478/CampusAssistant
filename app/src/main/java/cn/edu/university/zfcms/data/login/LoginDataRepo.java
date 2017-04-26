@@ -4,7 +4,7 @@ import android.content.Context;
 
 import cn.edu.university.zfcms.data.login.local.LocalLoginDataSource;
 import cn.edu.university.zfcms.data.login.remote.RemoteLoginDataSource;
-import cn.edu.university.zfcms.model.User;
+import cn.edu.university.zfcms.storage.entity.User;
 
 /**
  * Created by hjw on 16/4/15.
