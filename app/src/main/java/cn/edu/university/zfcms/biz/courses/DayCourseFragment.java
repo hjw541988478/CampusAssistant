@@ -3,16 +3,17 @@ package cn.edu.university.zfcms.biz.courses;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 
 import java.util.List;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.base.BaseFragment;
-import cn.edu.university.zfcms.storage.entity.Course;
+import cn.edu.university.zfcms.base.ui.BaseFragment;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.
@@ -23,7 +24,7 @@ public class DayCourseFragment extends BaseFragment implements CoursesContract.D
 
     private CoursesContract.Presenter coursesPresenter;
 
-    @BindView(R.id.day_course_view)
+    @Bind(R.id.day_course_view)
     CardView dayCourseView;
 
     public static DayCourseFragment newInstance() {
@@ -87,7 +88,12 @@ public class DayCourseFragment extends BaseFragment implements CoursesContract.D
     }
 
     @Override
-    public Context getRxLifeActivity() {
+    public Context getLongLifeCycleContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public Context getActivityContext() {
         return getActivity();
     }
 

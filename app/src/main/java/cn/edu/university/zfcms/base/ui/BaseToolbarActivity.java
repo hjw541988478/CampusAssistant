@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.base;
+package cn.edu.university.zfcms.base.ui;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import cn.edu.university.zfcms.R;
 
 /**
@@ -17,9 +17,9 @@ import cn.edu.university.zfcms.R;
 
 public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
 
-    @BindView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
-    @BindView(R.id.app_bar_layout)
+    @Bind(R.id.app_bar_layout)
     protected AppBarLayout mAppBarLayout;
 
     protected ActionBarHelper mActionBarHelper;

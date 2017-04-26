@@ -1,139 +1,54 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion versions.compileSdkVersion
-    buildToolsVersion versions.buildToolsVersion
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "cn.edu.university.zfcms"
-        minSdkVersion versions.minSdkVersion
-        targetSdkVersion versions.targetSdkVersion
-        versionCode versions.appVersionCode // Increase when upgrades
-        versionName versions.appVersionName // Comes from gradle.properties
-
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-
-        // Speed up the build by only fetching the resources for supported. See https://developer.android.com/studio/build/shrink-code.html
-        resConfigs "en"
-
-        jackOptions {
-            enabled true
-        }
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
     }
 
-    sourceSets.main.jni.srcDirs = [] //disable automatic ndk-build call
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 
     lintOptions {
         abortOnError false
     }
 
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/rxjava.properties'
-    }
-
     buildTypes {
-        debug {
-            minifyEnabled false
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
         release {
-            shrinkResources true
-            minifyEnabled true
-            useProguard true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    dexOptions {
-        preDexLibraries true
-        javaMaxHeapSize dexMemoryAllocation
-        dexInProcess true
-    }
-
-    greendao {
-        schemaVersion 1 // Increase when table changes
-        daoPackage 'cn.edu.university.zfcms.storage.db'
-        targetGenDir 'src/main/java'
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
 dependencies {
-    // Libraries under app/libs/ folder
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile project(':stateLayout')
-    // Support libraries
-    compile "com.android.support:support-annotations:$versions.supportLibrariesVersion"
-    compile "com.android.support:support-v4:$versions.supportLibrariesVersion"
-    compile "com.android.support:recyclerview-v7:$versions.supportLibrariesVersion"
-    compile "com.android.support:appcompat-v7:$versions.supportLibrariesVersion"
-    compile "com.android.support:design:$versions.supportLibrariesVersion"
-    compile "com.android.support:cardview-v7:$versions.supportLibrariesVersion"
-    // ButterKnife
-    compile "com.jakewharton:butterknife:$versions.butterknifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterknifeVersion"
-    // Glide
-    compile "com.github.bumptech.glide:glide:$versions.glideVersion"
-    // GreenDao
-    compile "org.greenrobot:greendao:$versions.greenDaoVersion"
-    compile "org.greenrobot:eventbus:$versions.greenEventbusVersion"
-    // MultiTypeAdapter
-    compile("me.drakeet.multitype:multitype:$versions.multiTypeVersion", {
-        exclude group: 'com.android.support'
-    })
-    // Retrofit2
-    compile "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
-    compile "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit4RxJava2Version"
-    compile "com.squareup.okhttp3:logging-interceptor:$versions.loggingInterceptorVersion"
-    // Rxjava2 Rxbinding2
-    compile "io.reactivex.rxjava2:rxandroid:$versions.rxAndroidVersion"
-    compile "io.reactivex.rxjava2:rxjava:$versions.rxJavaVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding:$versions.rxBindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$versions.rxBindingVersion"
-    compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxBindingVersion"
-    // LeakCanary
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$versions.leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanaryVersion"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanaryVersion"
-    // RxJsoup
-    compile "com.github.florent37:retrojsoup:$versions.rxJsoupVersion"
-    compile "com.github.florent37:rxjsoup:$versions.rxJsoupVersion"
-    annotationProcessor "com.github.florent37:retrojsoup-compiler:$versions.rxJsoupVersion"
-    compile "org.jsoup:jsoup:$versions.jsoupVersion"
-    // RxLifecycle
-    compile ("com.trello.rxlifecycle2:rxlifecycle:$versions.rxLifecycleVersion", {
-        exclude module: 'jsr305'
-    })
-    compile ("com.trello.rxlifecycle2:rxlifecycle-android:$versions.rxLifecycleVersion" , {
-        exclude module: 'jsr305'
-    })
-    compile ("com.trello.rxlifecycle2:rxlifecycle-components:$versions.rxLifecycleVersion" , {
-        exclude module: 'jsr305'
-    })
-    // CookieJar
-    compile ("com.github.franmontiel:PersistentCookieJar:$versions.cookieJarVersion" , {
-        exclude module: 'jsr305'
-    })
-    // Test
-    debugCompile("com.facebook.stetho:stetho-okhttp3:$versions.stethoOkHttpVersion", {
-        exclude module: 'jsr305'
-    })
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$versions.espressoVersion", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile "junit:junit:$versions.junitVersion"
-}
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
+    //GSON
+    compile 'com.google.code.gson:gson:2.6.2'
+    //注解 ViewId 包
+    compile 'com.jakewharton:butterknife:7.0.1'
+    //LeakCanary
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
+}

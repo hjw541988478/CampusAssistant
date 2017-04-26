@@ -1,6 +1,6 @@
 package cn.edu.university.zfcms.parser;
 
-import cn.edu.university.zfcms.app.mvp.BaseParser;
+import cn.edu.university.zfcms.base.func.BaseParser;
 
 /**
  * Created by hjw on 16/4/16.

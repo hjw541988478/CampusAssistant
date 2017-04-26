@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.base;
+package cn.edu.university.zfcms.base.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

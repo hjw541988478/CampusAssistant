@@ -14,7 +14,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.edu.university.zfcms.data.course.CourseDataSource;
 import cn.edu.university.zfcms.data.course.local.CoursePersistenceContract;
-import cn.edu.university.zfcms.storage.entity.Course;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/18.

@@ -2,10 +2,10 @@ package cn.edu.university.zfcms.biz.login;
 
 import android.graphics.Bitmap;
 
-import cn.edu.university.zfcms.app.mvp.BaseParser;
-import cn.edu.university.zfcms.app.mvp.BasePresenter;
-import cn.edu.university.zfcms.app.mvp.BaseView;
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.base.func.BaseParser;
+import cn.edu.university.zfcms.base.mvp.BasePresenter;
+import cn.edu.university.zfcms.base.mvp.BaseView;
+import cn.edu.university.zfcms.model.User;
 
 /**
  * Login协议

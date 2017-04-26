@@ -7,7 +7,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.edu.university.zfcms.data.login.LoginDataSource;
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.model.User;
 
 /**
  * Created by hjw on 16/4/20.

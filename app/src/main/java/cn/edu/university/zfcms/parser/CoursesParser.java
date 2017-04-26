@@ -11,8 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.edu.university.zfcms.biz.courses.CoursesContract;
-import cn.edu.university.zfcms.storage.entity.Course;
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.model.Course;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.util.PreferenceUtil;
 import cn.edu.university.zfcms.util.StringUtil;
 

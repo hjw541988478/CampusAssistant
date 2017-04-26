@@ -1,4 +1,4 @@
-package cn.edu.university.zfcms.app.mvp;
+package cn.edu.university.zfcms.base.func;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

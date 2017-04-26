@@ -1,6 +1,6 @@
 
 
-package cn.edu.university.zfcms.base;
+package cn.edu.university.zfcms.base.ui;
 
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenuView;
@@ -16,14 +16,14 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import cn.edu.university.zfcms.R;
 
 public abstract class BaseDrawerLayoutActivity extends BaseSwipeRefreshLayout {
 
-    @BindView(R.id.root_view)
+    @Bind(R.id.root_view)
     protected DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation_view)
+    @Bind(R.id.navigation_view)
     protected NavigationView mNavigationView;
 
     private ActionBarDrawerToggle mDrawerToggle;

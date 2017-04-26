@@ -2,6 +2,7 @@ package cn.edu.university.zfcms.biz.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,35 +14,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.base.BaseToolbarActivity;
+import cn.edu.university.zfcms.base.ui.BaseToolbarActivity;
 import cn.edu.university.zfcms.biz.courses.CoursesActivity;
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.model.User;
 
 public class LoginActivity extends BaseToolbarActivity implements LoginContract.View {
 
-    private static final String TAG = "LoginActivity";
+    private static final String tag = LoginActivity.class.getSimpleName();
 
     private LoginPresenter loginPresenter;
 
-    @BindView(R.id.username)
+    @Bind(R.id.username)
     EditText mUsernameView;
-    @BindView(R.id.password)
+    @Bind(R.id.password)
     EditText mPasswordView;
-    @BindView(R.id.checkcode)
+    @Bind(R.id.checkcode)
     EditText mCheckCodeTextView;
-    @BindView(R.id.checkcode_img)
+    @Bind(R.id.checkcode_img)
     ImageView mCheckCodeView;
-    @BindView(R.id.btn_sign_in)
+    @Bind(R.id.btn_sign_in)
     Button mSignIn;
-    @BindView(R.id.login_progress)
+    @Bind(R.id.login_progress)
     View mProgressView;
-    @BindView(R.id.code_loading_progress)
+    @Bind(R.id.code_loading_progress)
     View mCodeLoadingView;
-    @BindView(R.id.login_form)
+    @Bind(R.id.login_form)
     View mLoginFormView;
-    @BindView(R.id.checkcode_container)
+    @Bind(R.id.checkcode_container)
     View mCheckcodeViewGroup;
 
     @Override
@@ -139,6 +140,8 @@ public class LoginActivity extends BaseToolbarActivity implements LoginContract.
             User loginUser = new User();
             loginUser.userId = mUsernameView.getText().toString().trim();
             loginUser.userPswd = mPasswordView.getText().toString().trim();
+            loginUser.setUsername(loginUser.userId);
+            loginUser.setPassword(loginUser.userPswd);
             String checkCode = mCheckCodeTextView.getText().toString().trim();
             if (isBassLoginType()) {
                 loginPresenter.login(loginUser);
@@ -266,6 +269,17 @@ public class LoginActivity extends BaseToolbarActivity implements LoginContract.
 
     @Override
     public void setPresenter(LoginContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public Context getLongLifeCycleContext() {
+        return getApplicationContext();
     }
 }
 
