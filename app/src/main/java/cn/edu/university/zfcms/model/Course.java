@@ -1,12 +1,13 @@
-package cn.edu.university.zfcms.storage.entity;
+package cn.edu.university.zfcms.model;
 
 import java.util.List;
+
+import cn.bmob.v3.BmobObject;
 
 /**
  * Created by hjw on 16/4/15.
  */
-public class Course {
-    public String courseTableId;
+public class Course extends BmobObject{
     // 第几节课开始
     public int whichSectionStart;
     // 第几节课结束
@@ -33,7 +34,7 @@ public class Course {
     }
 
     public Course(String timeTableId, int whichSectionStart, int whichSectionEnd, List<String> weeks, String dayOfWeek, String courseName, String whoTeach, String whereTeach) {
-        this.courseTableId = timeTableId;
+        this.setObjectId(timeTableId);
         this.whichSectionStart = whichSectionStart;
         this.whichSectionEnd = whichSectionEnd;
         this.weeks = weeks;
@@ -46,7 +47,8 @@ public class Course {
     @Override
     public String toString() {
         return "Course{" +
-                "whichSectionStart=" + whichSectionStart +
+                "objectId=" + getObjectId() +
+                ", whichSectionStart=" + whichSectionStart +
                 ", whichSectionEnd=" + whichSectionEnd +
                 ", weeks=" + weeks +
                 ", dayOfWeek='" + dayOfWeek + '\'' +

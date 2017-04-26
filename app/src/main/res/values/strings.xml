@@ -30,10 +30,4 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-
-    <string name="err_login_checkcode">"验证码不正确"</string>
-    <string name="err_login_idorpswd">"学号或密码不正确"</string>
-    <string name="err_login_zfsoft">"教务系统出现故障请稍候重试."</string>
-    <string name="err_load_checkcode">验证码加载失败"</string>
-    <string name="err_login_viewstate">"获取viewstate参数失败"</string>
 </resources>

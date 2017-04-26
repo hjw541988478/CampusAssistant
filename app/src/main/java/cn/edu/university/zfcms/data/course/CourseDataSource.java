@@ -2,7 +2,7 @@ package cn.edu.university.zfcms.data.course;
 
 import java.util.List;
 
-import cn.edu.university.zfcms.storage.entity.Course;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.

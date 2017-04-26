@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.edu.university.zfcms.app.mvp.BaseDataSource;
+import cn.edu.university.zfcms.base.func.BaseDataSource;
 import cn.edu.university.zfcms.biz.courses.CoursesContract;
-import cn.edu.university.zfcms.storage.entity.Course;
+import cn.edu.university.zfcms.model.Course;
 import cn.edu.university.zfcms.http.HttpManager;
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.data.course.CourseDataSource;
 import cn.edu.university.zfcms.parser.CoursesParser;
 import cn.edu.university.zfcms.util.PreferenceUtil;

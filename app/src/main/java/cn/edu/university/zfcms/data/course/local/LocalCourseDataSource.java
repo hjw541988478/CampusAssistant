@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.university.zfcms.data.db.CampusAssitDbHelper;
-import cn.edu.university.zfcms.storage.entity.Course;
+import cn.edu.university.zfcms.model.Course;
 import cn.edu.university.zfcms.data.course.CourseDataSource;
 import cn.edu.university.zfcms.util.StringUtil;
 

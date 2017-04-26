@@ -2,22 +2,32 @@ package cn.edu.university.zfcms.data.login;
 
 import android.graphics.Bitmap;
 
-import cn.edu.university.zfcms.app.mvp.BaseDataSource;
-import cn.edu.university.zfcms.storage.entity.User;
-import io.reactivex.Single;
+import cn.edu.university.zfcms.base.func.BaseDataSource;
+import cn.edu.university.zfcms.model.User;
 
 /**
  * Created by hjw on 16/4/15.
  */
 public interface LoginDataSource extends BaseDataSource {
 
+    interface GetLoginDataCallback{
+        void onGetLoginData(User user);
+        void onGetLoginError(String msg);
+    }
+
+    interface GetLoginCheckCodeCallback {
+        void onGetCheckCode(Bitmap bitmap);
+        void onGetCheckCodeError();
+    }
+
     User getLoginUser();
+    void loadCheckCode(GetLoginCheckCodeCallback callback);
 
-    Single<Bitmap> loadCheckCode();
+    void login(User user, String checkCode, GetLoginDataCallback callback);
 
-    Single<User> login(User user, String checkCode);
+    void signIn(User user, GetLoginDataCallback callback);
 
-    Single<User> signUp(User user);
+    void signUp(User user);
 
     void updateLoginUser(User user);
 

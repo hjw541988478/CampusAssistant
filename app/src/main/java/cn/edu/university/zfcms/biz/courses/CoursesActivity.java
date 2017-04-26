@@ -10,10 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-import butterknife.BindView;
+import butterknife.Bind;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.app.Constant;
-import cn.edu.university.zfcms.base.BaseDrawerLayoutActivity;
+import cn.edu.university.zfcms.base.func.Config;
+import cn.edu.university.zfcms.base.ui.BaseDrawerLayoutActivity;
+import cn.edu.university.zfcms.base.ui.BaseToolbarActivity;
 import cn.edu.university.zfcms.data.course.CourseDataRepo;
 
 /**
@@ -37,7 +38,7 @@ public class CoursesActivity extends BaseDrawerLayoutActivity {
         context.startActivity(intent);
     }
 
-    @BindView(R.id.tab_layout)
+    @Bind(R.id.tab_layout)
     TabLayout tabs;
 
     protected TabLayout getTabs() {
@@ -98,7 +99,7 @@ public class CoursesActivity extends BaseDrawerLayoutActivity {
 
     @Override
     protected int[] getMenuItemIds() {
-        return Constant.menuIds;
+        return Config.menuIds;
     }
 
     @Override

@@ -2,31 +2,32 @@ package cn.edu.university.zfcms.biz.courses;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
 
 import java.util.List;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import cn.edu.university.zfcms.R;
-import cn.edu.university.zfcms.app.ZfsoftCampusAsstApp;
-import cn.edu.university.zfcms.base.BaseFragment;
+import cn.edu.university.zfcms.base.ui.BaseFragment;
 import cn.edu.university.zfcms.biz.courses.adapter.DayCoursesAdapter;
-import cn.edu.university.zfcms.storage.entity.Course;
+import cn.edu.university.zfcms.model.Course;
 
 /**
  * Created by hjw on 16/4/15.
  */
 public class DayCoursesFragment extends BaseFragment implements CoursesContract.View {
 
-    private static final String TAG = "DayCoursesFragment";
+    private static final String tag = DayCoursesFragment.class.getSimpleName();
 
     private CoursesContract.Presenter coursesPresenter;
     private DayCoursesAdapter adapter;
 
-    @BindView(R.id.day_courses_pager)
+    @Bind(R.id.day_courses_pager)
     ViewPager pager;
 
     public static DayCoursesFragment newInstance() {
@@ -60,7 +61,7 @@ public class DayCoursesFragment extends BaseFragment implements CoursesContract.
 
     @Override
     protected void initNoLazyData() {
-        adapter = new DayCoursesAdapter(ZfsoftCampusAsstApp.getInstance(), getFragmentManager());
+        adapter = new DayCoursesAdapter(getLongLifeCycleContext(), getFragmentManager());
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(adapter.getCount());
         ((CoursesActivity) getActivity()).getTabs().setupWithViewPager(pager);
@@ -114,7 +115,12 @@ public class DayCoursesFragment extends BaseFragment implements CoursesContract.
     }
 
     @Override
-    public Context getRxLifeActivity() {
+    public Context getLongLifeCycleContext() {
+        return getActivity().getApplicationContext();
+    }
+
+    @Override
+    public Context getActivityContext() {
         return getActivity();
     }
 }

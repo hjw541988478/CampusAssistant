@@ -4,7 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.model.User;
 import cn.edu.university.zfcms.biz.login.LoginContract;
 import cn.edu.university.zfcms.util.StringUtil;
 

@@ -1,19 +1,19 @@
-package cn.edu.university.zfcms.base;
+package cn.edu.university.zfcms.base.ui;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
-
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 
 /**
  * Created by hjw on 16/3/9.
  */
-public abstract class BaseAppCompatActivity extends RxAppCompatActivity {
+public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,9 +49,5 @@ public abstract class BaseAppCompatActivity extends RxAppCompatActivity {
         } else {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         }
-    }
-
-    public RxAppCompatActivity getRxLifeActivity() {
-        return this;
     }
 }
