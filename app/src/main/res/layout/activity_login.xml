@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".biz.login.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"

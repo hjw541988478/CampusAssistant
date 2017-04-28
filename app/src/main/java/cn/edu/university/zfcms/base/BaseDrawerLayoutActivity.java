@@ -8,13 +8,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import cn.edu.university.zfcms.R;
@@ -29,7 +26,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseSwipeRefreshLayout {
     private ActionBarDrawerToggle mDrawerToggle;
 
 
-    protected HashMap<Integer, MenuItem> mMenuItems;
+    protected SparseArray<MenuItem> mMenuItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +34,10 @@ public abstract class BaseDrawerLayoutActivity extends BaseSwipeRefreshLayout {
         if (this.getNavigationItemSelectedListener() != null)
             this.mNavigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
         hideVerticalScrollBar();
-        this.mDrawerLayout.setDrawerListener(new DrawerStateListener());
+        this.mDrawerLayout.addDrawerListener(new DrawerStateListener());
 
         // 初始化MenuItems
-        this.mMenuItems = new HashMap<>();
+        this.mMenuItems = new SparseArray<>();
         int[] menuItemIds = this.getMenuItemIds();
         if (menuItemIds.length > 0) {
             for (int id : menuItemIds) {
@@ -101,9 +98,10 @@ public abstract class BaseDrawerLayoutActivity extends BaseSwipeRefreshLayout {
     protected boolean menuItemChecked(int itemId) {
         MenuItem old = null;
         MenuItem now;
-        if (this.mMenuItems.containsKey(itemId)) {
-            for (Map.Entry<Integer, MenuItem> entry : this.mMenuItems.entrySet()) {
-                MenuItem menuItem = entry.getValue();
+        if (this.mMenuItems.get(itemId) != null) {
+
+            for (int key = 0; key < this.mMenuItems.size(); key ++) {
+                MenuItem menuItem = this.mMenuItems.get(key);
                 /*
                  * 先找这个item是否之前被选过
                  * 不影响下面的设置选中

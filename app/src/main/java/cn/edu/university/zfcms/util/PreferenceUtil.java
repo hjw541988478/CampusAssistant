@@ -10,10 +10,10 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.edu.university.zfcms.app.Constant;
-import cn.edu.university.zfcms.data.login.local.LocalLoginDataSource;
-import cn.edu.university.zfcms.storage.entity.Setting;
-import cn.edu.university.zfcms.storage.entity.User;
+import cn.edu.university.zfcms.app.Constants;
+import cn.edu.university.zfcms.model.data.login.LocalLoginDataSource;
+import cn.edu.university.zfcms.model.entity.Setting;
+import cn.edu.university.zfcms.model.entity.User;
 
 /**
  * Created by hjw on 16/4/15.
@@ -32,26 +32,26 @@ public class PreferenceUtil {
 
     public static void set(String key, String val) {
         SharedPreferences.Editor editor = mContext
-                .getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE).edit();
+                .getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE).edit();
         editor.putString(key, val);
         editor.apply();
     }
 
     public static String get(String key) {
-        String spText = mContext.getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE)
+        String spText = mContext.getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE)
                 .getString(key, "");
         return spText;
     }
 
     public static void set(Object obj, Class claz) {
         SharedPreferences.Editor editor = mContext
-                .getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE).edit();
+                .getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE).edit();
         editor.putString(claz.getSimpleName(), GsonUtil.getGson().toJson(obj));
         editor.apply();
     }
 
     public static <T> T get(Class<T> clazz) {
-        String spText = mContext.getSharedPreferences(Constant.SP_NAME, Context.MODE_PRIVATE)
+        String spText = mContext.getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE)
                 .getString(clazz.getSimpleName(), "");
         T content = null;
         if (!spText.isEmpty()) {

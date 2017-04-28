@@ -70,7 +70,7 @@ android {
 
     greendao {
         schemaVersion versions.dbVersion // change when table changes
-        daoPackage "${versions.applicationId}.storage.db"
+        daoPackage "${versions.applicationId}.model.db"
         targetGenDir 'src/main/java'
     }
 }
@@ -99,15 +99,6 @@ dependencies {
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$versions.rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxBindingVersion"
     compile "com.tbruyelle.rxpermissions2:rxpermissions:$versions.rxPermissionVersion"
-    compile ("com.trello.rxlifecycle2:rxlifecycle:$versions.rxLifecycleVersion", {
-        exclude module: 'jsr305'
-    })
-    compile ("com.trello.rxlifecycle2:rxlifecycle-android:$versions.rxLifecycleVersion" , {
-        exclude module: 'jsr305'
-    })
-    compile ("com.trello.rxlifecycle2:rxlifecycle-components:$versions.rxLifecycleVersion" , {
-        exclude module: 'jsr305'
-    })
     // jsoup
     compile "com.github.florent37:retrojsoup:$versions.rxJsoupVersion"
     compile "com.github.florent37:rxjsoup:$versions.rxJsoupVersion"

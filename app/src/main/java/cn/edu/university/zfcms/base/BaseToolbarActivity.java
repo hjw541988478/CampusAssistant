@@ -15,7 +15,7 @@ import cn.edu.university.zfcms.R;
  * Created by hjw on 16/4/16.
  */
 
-public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
+public abstract class BaseToolbarActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     protected Toolbar mToolbar;
@@ -25,7 +25,8 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
     protected ActionBarHelper mActionBarHelper;
 
     @Override
-    protected void initToolbar(Bundle savedInstanceState) {
+    protected void onViewCreated(Bundle savedInstanceState) {
+        super.onViewCreated(savedInstanceState);
         if (this.mToolbar == null || this.mAppBarLayout == null)
             return;
 
