@@ -6,23 +6,24 @@ android {
     buildToolsVersion versions.buildToolsVersion
 
     defaultConfig {
-        applicationId "cn.edu.university.zfcms"
+        applicationId versions.applicationId
         minSdkVersion versions.minSdkVersion
         targetSdkVersion versions.targetSdkVersion
-        versionCode versions.appVersionCode // Increase when upgrades
-        versionName versions.appVersionName // Comes from gradle.properties
+        versionCode versions.versionCode
+        versionName versions.versionName
 
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
 
-        // Speed up the build by only fetching the resources for supported. See https://developer.android.com/studio/build/shrink-code.html
-        resConfigs "en"
+        resConfigs "zh"
 
         jackOptions {
             enabled true
         }
-    }
 
-    sourceSets.main.jni.srcDirs = [] //disable automatic ndk-build call
+        ndk {
+            abiFilters "armeabi"
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -43,15 +44,10 @@ android {
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
-            useProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-
         release {
             shrinkResources true
             minifyEnabled true
+            // zipAlignEnabled true
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -63,57 +59,46 @@ android {
         dexInProcess true
     }
 
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips', 'x86', 'x86_64'
+            universalApk true
+        }
+    }
+
     greendao {
-        schemaVersion 1 // Increase when table changes
-        daoPackage 'cn.edu.university.zfcms.storage.db'
+        schemaVersion versions.dbVersion // change when table changes
+        daoPackage "${versions.applicationId}.storage.db"
         targetGenDir 'src/main/java'
     }
 }
 
 dependencies {
-    // Libraries under app/libs/ folder
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-//    compile project(':stateLayout')
-    // Support libraries
-    compile "com.android.support:support-annotations:$versions.supportLibrariesVersion"
-    compile "com.android.support:support-v4:$versions.supportLibrariesVersion"
+    // base
     compile "com.android.support:recyclerview-v7:$versions.supportLibrariesVersion"
     compile "com.android.support:appcompat-v7:$versions.supportLibrariesVersion"
     compile "com.android.support:design:$versions.supportLibrariesVersion"
     compile "com.android.support:cardview-v7:$versions.supportLibrariesVersion"
-    // ButterKnife
+    // di
     compile "com.jakewharton:butterknife:$versions.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterknifeVersion"
-    // Glide
-    compile "com.github.bumptech.glide:glide:$versions.glideVersion"
-    // GreenDao
     compile "org.greenrobot:greendao:$versions.greenDaoVersion"
-    compile "org.greenrobot:eventbus:$versions.greenEventbusVersion"
-    // MultiTypeAdapter
-    compile("me.drakeet.multitype:multitype:$versions.multiTypeVersion", {
-        exclude group: 'com.android.support'
-    })
-    // Retrofit2
+    annotationProcessor "com.github.florent37:retrojsoup-compiler:$versions.rxJsoupVersion"
+    // network
     compile "com.squareup.retrofit2:retrofit:$versions.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$versions.retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit4RxJava2Version"
     compile "com.squareup.okhttp3:logging-interceptor:$versions.loggingInterceptorVersion"
-    // Rxjava2 Rxbinding2
+    compile "com.github.bumptech.glide:glide:$versions.glideVersion"
+    // rx
     compile "io.reactivex.rxjava2:rxandroid:$versions.rxAndroidVersion"
     compile "io.reactivex.rxjava2:rxjava:$versions.rxJavaVersion"
     compile "com.jakewharton.rxbinding2:rxbinding:$versions.rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-support-v4:$versions.rxBindingVersion"
     compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxBindingVersion"
-    // LeakCanary
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$versions.leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanaryVersion"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanaryVersion"
-    // RxJsoup
-    compile "com.github.florent37:retrojsoup:$versions.rxJsoupVersion"
-    compile "com.github.florent37:rxjsoup:$versions.rxJsoupVersion"
-    annotationProcessor "com.github.florent37:retrojsoup-compiler:$versions.rxJsoupVersion"
-    compile "org.jsoup:jsoup:$versions.jsoupVersion"
-    // RxLifecycle
+    compile "com.tbruyelle.rxpermissions2:rxpermissions:$versions.rxPermissionVersion"
     compile ("com.trello.rxlifecycle2:rxlifecycle:$versions.rxLifecycleVersion", {
         exclude module: 'jsr305'
     })
@@ -123,17 +108,37 @@ dependencies {
     compile ("com.trello.rxlifecycle2:rxlifecycle-components:$versions.rxLifecycleVersion" , {
         exclude module: 'jsr305'
     })
-    // CookieJar
+    // jsoup
+    compile "com.github.florent37:retrojsoup:$versions.rxJsoupVersion"
+    compile "com.github.florent37:rxjsoup:$versions.rxJsoupVersion"
+    compile "org.jsoup:jsoup:$versions.jsoupVersion"
+    // other
+    compile "jp.wasabeef:glide-transformations:$versions.glideTransfromVersion"
+    compile "me.yokeyword:fragmentation:$versions.fragmentationVersion"
+    compile "com.android.support:multidex:$versions.multidexVersion"
+    compile "com.orhanobut:logger:$versions.loggerVersion"
+    compile ("me.drakeet.multitype:multitype:$versions.multiTypeVersion", {
+        exclude group: 'com.android.support'
+    })
     compile ("com.github.franmontiel:PersistentCookieJar:$versions.cookieJarVersion" , {
         exclude module: 'jsr305'
     })
-    // Test
-    debugCompile("com.facebook.stetho:stetho-okhttp3:$versions.stethoOkHttpVersion", {
+    // quality
+    debugCompile "com.github.moduth:blockcanary-android:$versions.blockCanaryVersion"
+    releaseCompile "com.github.moduth:blockcanary-no-op:$versions.blockCanaryVersion"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$versions.leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanaryVersion"
+    debugCompile ("com.facebook.stetho:stetho-okhttp3:$versions.stethoOkHttpVersion", {
         exclude module: 'jsr305'
     })
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$versions.espressoVersion", {
+    // test
+    testCompile "junit:junit:$versions.junitVersion"
+    androidTestCompile "com.android.support:support-annotations:$versions.supportLibrariesVersion"
+    androidTestCompile "com.android.support.test:runner:$versions.runnerVersion"
+    androidTestCompile "com.android.support.test:rules:$versions.rulesVersion"
+    androidTestCompile ("com.android.support.test.espresso:espresso-core:$versions.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile "junit:junit:$versions.junitVersion"
+
 }
 
