@@ -24,10 +24,9 @@
 ## 功能截图
 [<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_home.png" >](https://github.com/hjw541988478/CampusAssistant)[<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_table.png" >](https://github.com/hjw541988478/CampusAssistant)[<img src="https://github.com/hjw541988478/CampusAssistant/blob/master/screenshots/ca_screenshot_grade.png" >](https://github.com/hjw541988478/CampusAssistant)
 ## JoinUs
-可在微博留言，建议等，欢迎 Pull，Fork，Star；
+可以邮件联系，欢迎提 issue，pull，fork，star；
 
-
-我们的新浪微博地址：[http://weibo.com/youwoxiaoyuan](http://weibo.com/youwoxiaoyuan)
+E-mail：[huangjiawendanny@gmail.com](mailto:huangjiawendanny@gmail.com)
 
 ## License
 CampusAssustant is licensed under [Apache License](https://github.com/hjw541988478/CampusAssistant/blob/master/LICENSE). 
